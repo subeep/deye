@@ -1,0 +1,57 @@
+# Build directories
+build/
+bin/
+lib/
+out/
+
+# CMake artifacts
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+compile_commands.json
+CTestTestfile.cmake
+DartConfiguration.tcl
+Makefile
+*.cmake
+!CMakeLists.txt
+
+# Compiled binaries and libraries
+*.o
+*.obj
+*.so
+*.dylib
+*.dll
+*.a
+*.lib
+*.exe
+drone_recorder
+detector_live_check
+test_controller
+test_detector_worker
+test_hopping
+libdrone_turbo.so
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Temporary, cache, and test output
+Testing/
+*.log
+*.tmp
+__pycache__/
+*.py[cod]
+*$py.class
+.cache/
+
+# IQ Recordings & Data
+recordings/
+iq_*.bin
+iq_*.json
+*.fc32
+!tests/data/*.fc32
+!tests/data/*.csv
