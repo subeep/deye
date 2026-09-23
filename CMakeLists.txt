@@ -176,4 +176,10 @@ if(BUILD_TESTING)
     target_link_libraries(test_controller PRIVATE pthread)
     add_dependencies(test_controller drone_turbo)
     add_test(NAME detector_controller COMMAND test_controller)
+    add_test(NAME detector_benchmark COMMAND ${Python3_EXECUTABLE}
+        ${CMAKE_SOURCE_DIR}/tests/test_benchmark.py)
+    add_test(NAME detector_preprocessing COMMAND ${Python3_EXECUTABLE}
+        ${CMAKE_SOURCE_DIR}/tests/test_preprocessing.py)
+    add_test(NAME detector_dataset COMMAND ${Python3_EXECUTABLE}
+        ${CMAKE_SOURCE_DIR}/tests/test_dronedetect.py)
 endif()

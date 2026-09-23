@@ -238,15 +238,18 @@ void UsrpWorker::rx_thread_func() {
         size_t num_rx = rx_stream_->recv(received, CHUNK_SAMPLES, md, 2.0, false);
 
         if (md.error_code == uhd::rx_metadata_t::ERROR_CODE_TIMEOUT) {
+            if (detector_active.load()) ++detector_rx_timeouts;
             ++detector_epoch_;
             continue;
         }
         if (md.error_code == uhd::rx_metadata_t::ERROR_CODE_OVERFLOW) {
+            if (detector_active.load()) ++detector_rx_overflows;
             overflow_count.fetch_add(CHUNK_SAMPLES, std::memory_order_relaxed);
             ++detector_epoch_;
         }
         if (md.error_code != uhd::rx_metadata_t::ERROR_CODE_NONE &&
             md.error_code != uhd::rx_metadata_t::ERROR_CODE_OVERFLOW) {
+            if (detector_active.load()) ++detector_rx_errors;
             last_error_ = "RX error: " + md.strerror();
             ++detector_epoch_;
             continue;
@@ -254,6 +257,10 @@ void UsrpWorker::rx_thread_func() {
 
         if (num_rx > 0) {
             if (detector_settle_samples_) {
+                if (detector_active.load()) {
+                    detector_settle_skipped+=num_rx;
+                    detector_settle_ns+=static_cast<uint64_t>(num_rx/current_rate_.load()*1e9);
+                }
                 detector_settle_samples_ -= std::min(detector_settle_samples_, num_rx);
             } else if (detector_active.load()) {
                 std::lock_guard<std::mutex> lock(detector_mutex_);

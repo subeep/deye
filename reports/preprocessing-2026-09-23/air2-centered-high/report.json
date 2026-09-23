@@ -1,0 +1,127 @@
+{
+  "schema_version": 1,
+  "manifest_sha256": "ee61fa55930ab934f225571a50e4cf745a1bb0a2a70cd511cc2457220be1babc",
+  "turbo_sha256": "1a56f83f7f3d83bd8e6ebe9b710299b4f5dabeca37438152c212d15b2c2a8ebf",
+  "source_sha256": {
+    "backend.py": "e0ba3270e53bd1a0b865d430fce4c1c1b48aa9a831b35d6640ff114f43c50da2",
+    "benchmark.py": "d8c1bab5249f2c3346705779e60ef3d4c7f2a65f4c6c0869993dcc250df985ce",
+    "dronedetect.py": "ec0c43234586870936c2de54c86600a03d55bb10b22fdc7b389cf6c8414aeb04",
+    "preprocessing.py": "b416b2c5621397add699a1453ac0635d24c34ab674cdd9e7ddee0287ff0b92e7",
+    "reference/Packet.py": "550a223c5dcdef347772e64b92c72cb7b86c4fc9a13619f8eee70e8072afb2a2",
+    "reference/SpectrumCapture.py": "84aad156238a18b6dc796ca271857ecb8a3a69f8e3adcbbd8641d4779056bf16",
+    "reference/droneid_packet.py": "ee77742c0cad9b4f32731ca4520926221b8866602df6f2e7ae03dbba4f940c4e",
+    "reference/goldgen.py": "b211925fee6208f2ec6c1e733c90db8a9411abcb70913ce7e871064a940be931",
+    "reference/helpers.py": "3170e19620d676d1bda2482d6c82b81e52dec7ec7b35fa5cee278202edce6d0b",
+    "reference/packetizer.py": "55a7688b0c693dd9e8e2f9e3bc245428be417d2b77202f3ea4da41c5de449a3f",
+    "reference/qpsk.py": "18de24827ce5b9ce6a7c374779d34a3dc3abf6d4ac9400cbf93620e37ef5b274",
+    "reference/zcsequence.py": "4534aac3dffbb328cc0581f3a997f28ee3ea6ed6df7e8af2fe7d921a339af267"
+  },
+  "environment": {
+    "python": "3.10.12",
+    "numpy": "1.26.4",
+    "scipy": "1.15.3",
+    "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35"
+  },
+  "chunk_ms": 20,
+  "preprocessing": {
+    "dc_block": true,
+    "shift_hz": 2000000.0,
+    "output_rate_hz": 25000000.0,
+    "bandwidth_hz": null
+  },
+  "results": [
+    {
+      "id": "dji_mavic_air_2",
+      "kind": "real",
+      "split": "development",
+      "session": "rub-dji_mavic_air_2",
+      "status": "fail",
+      "failures": [
+        "Confirmed count 0 outside [1, 1]",
+        "Missing protocols: DJI DroneID",
+        "Unexpected protocols: DJI-like OFDM",
+        "Confirmed models differ: []"
+      ],
+      "metadata": {
+        "id": "dji_mavic_air_2",
+        "session": "rub-dji_mavic_air_2",
+        "split": "development",
+        "kind": "real",
+        "format": "cf32_le",
+        "path": "/home/sudeep/Pictures/Drone_recorder./tests/data/dji_mavic_air_2.fc32",
+        "sha256": "623fa40f190d3fd859ec2fd62b379ad9a01a0485db3179ae29ac2e3c7a070450",
+        "sample_rate_hz": 50000000,
+        "center_frequency_hz": 2444500000,
+        "metadata": {
+          "model": "Mavic Air 2",
+          "firmware": null,
+          "controller_firmware": null,
+          "gain_db": null,
+          "antenna": null,
+          "captured_at": null,
+          "operating_state": null,
+          "frequency_note": "Replay reference center; original absolute RF center is not established."
+        },
+        "provenance": {
+          "source": "https://github.com/RUB-SysSec/DroneSecurity",
+          "commit": "9ff819843bee48fb140a0704ec78aff757896dea",
+          "license": "AGPL-3.0",
+          "note": "Already used for development; not held-out evidence."
+        },
+        "expected": {
+          "confirmed_min": 1,
+          "confirmed_max": 1,
+          "required_protocols": [
+            "DJI DroneID"
+          ],
+          "allowed_protocols": [
+            "DJI DroneID"
+          ],
+          "confirmed_models": [
+            "Mavic Air 2"
+          ]
+        }
+      },
+      "input_hash_scope": "file",
+      "input_sha256": "623fa40f190d3fd859ec2fd62b379ad9a01a0485db3179ae29ac2e3c7a070450",
+      "samples": 225280,
+      "duration_s": 0.0045056,
+      "chunks": 1,
+      "confirmed": 0,
+      "candidates": 2,
+      "rejected": 2,
+      "protocols": {
+        "DJI-like OFDM": 1
+      },
+      "confirmed_models": [],
+      "first_valid_available_capture_s": null,
+      "analysis_ms": 135.59246299701044,
+      "chunk_p50_ms": 135.59246299701044,
+      "chunk_p95_ms": 135.59246299701044,
+      "realtime_factor": 30.094207873981365,
+      "preprocessing_ms": 17.455740002333187,
+      "processed_samples": 112603,
+      "preprocessing": {
+        "output_rate_hz": 25000000.0,
+        "center_frequency_hz": 2446500000.0,
+        "output_samples": 112603,
+        "filter_delay_input_samples": 37.0,
+        "warmup_discarded_input_samples": 74
+      },
+      "packet_recovery_fraction": null,
+      "events": [
+        {
+          "protocol": "DJI-like OFDM",
+          "link": "Digital link; role unknown",
+          "evidence": "Repeated cyclic prefixes (66.6667 us useful symbol); no validated packet",
+          "frequency": 2446500000.0,
+          "power": -25.130257352116775,
+          "confirmed": false,
+          "score": 0.9166082395599936,
+          "timestamp": 7.4e-07
+        }
+      ]
+    }
+  ],
+  "status": "fail"
+}

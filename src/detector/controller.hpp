@@ -18,6 +18,10 @@ private:
     std::vector<double> sequence_;
     size_t position_{};
     uint64_t last_decoded_{};
+    uint64_t overflow_base_{}, timeout_base_{}, error_base_{}, settle_base_{}, settle_ns_base_{};
+    std::vector<double> away_seconds_;
+    double previous_frequency_{};
+    std::chrono::steady_clock::time_point coverage_tick_;
     std::chrono::steady_clock::time_point deadline_, tune_deadline_;
 };
 }

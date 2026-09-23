@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "captures": [
+    {
+      "id": "dji_mini2",
+      "session": "rub-dji_mini2",
+      "split": "development",
+      "kind": "real",
+      "format": "cf32_le",
+      "path": "/home/sudeep/Pictures/Drone_recorder./tests/data/dji_mini2.fc32",
+      "sha256": "5a17913cb11cde2919347054700345c9e5595eaff7818980d332b8ac8910bc55",
+      "sample_rate_hz": 50000000,
+      "center_frequency_hz": 2444500000,
+      "metadata": {
+        "model": "Mini 2",
+        "firmware": null,
+        "controller_firmware": null,
+        "gain_db": null,
+        "antenna": null,
+        "captured_at": null,
+        "operating_state": null,
+        "frequency_note": "Replay reference center; original absolute RF center is not established."
+      },
+      "provenance": {
+        "source": "https://github.com/RUB-SysSec/DroneSecurity",
+        "commit": "9ff819843bee48fb140a0704ec78aff757896dea",
+        "license": "AGPL-3.0",
+        "note": "Already used for development; not held-out evidence."
+      },
+      "expected": {
+        "confirmed_min": 8,
+        "confirmed_max": 8,
+        "required_protocols": [
+          "DJI DroneID"
+        ],
+        "allowed_protocols": [
+          "DJI DroneID"
+        ],
+        "confirmed_models": [
+          "Mini 2"
+        ]
+      }
+    },
+    {
+      "id": "dji_mavic_air_2",
+      "session": "rub-dji_mavic_air_2",
+      "split": "development",
+      "kind": "real",
+      "format": "cf32_le",
+      "path": "/home/sudeep/Pictures/Drone_recorder./tests/data/dji_mavic_air_2.fc32",
+      "sha256": "623fa40f190d3fd859ec2fd62b379ad9a01a0485db3179ae29ac2e3c7a070450",
+      "sample_rate_hz": 50000000,
+      "center_frequency_hz": 2444500000,
+      "metadata": {
+        "model": "Mavic Air 2",
+        "firmware": null,
+        "controller_firmware": null,
+        "gain_db": null,
+        "antenna": null,
+        "captured_at": null,
+        "operating_state": null,
+        "frequency_note": "Replay reference center; original absolute RF center is not established."
+      },
+      "provenance": {
+        "source": "https://github.com/RUB-SysSec/DroneSecurity",
+        "commit": "9ff819843bee48fb140a0704ec78aff757896dea",
+        "license": "AGPL-3.0",
+        "note": "Already used for development; not held-out evidence."
+      },
+      "expected": {
+        "confirmed_min": 1,
+        "confirmed_max": 1,
+        "required_protocols": [
+          "DJI DroneID"
+        ],
+        "allowed_protocols": [
+          "DJI DroneID"
+        ],
+        "confirmed_models": [
+          "Mavic Air 2"
+        ]
+      }
+    }
+  ]
+}

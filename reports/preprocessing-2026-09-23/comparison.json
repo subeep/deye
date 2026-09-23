@@ -1,0 +1,172 @@
+[
+  {
+    "run": "baseline",
+    "status": "pass",
+    "captures": 12,
+    "confirmed": 9,
+    "candidates": 13,
+    "analysis_s": 0.9300531939989014,
+    "preprocessing_s": 0.0,
+    "events": {
+      "DJI DroneID": 9,
+      "Unknown RF": 3,
+      "LoRa CSS / ELRS candidate": 1
+    },
+    "failures": {}
+  },
+  {
+    "run": "dc-regression",
+    "status": "pass",
+    "captures": 12,
+    "confirmed": 9,
+    "candidates": 13,
+    "analysis_s": 0.9363247089968354,
+    "preprocessing_s": 0.04875746900870581,
+    "events": {
+      "DJI DroneID": 9,
+      "Unknown RF": 3,
+      "LoRa CSS / ELRS candidate": 1
+    },
+    "failures": {}
+  },
+  {
+    "run": "dji-25msps",
+    "status": "fail",
+    "captures": 2,
+    "confirmed": 0,
+    "candidates": 2,
+    "analysis_s": 0.18468333599957987,
+    "preprocessing_s": 0.04224684899963904,
+    "events": {
+      "DJI-like OFDM": 2
+    },
+    "failures": {
+      "dji_mini2": [
+        "Confirmed count 0 outside [8, 8]",
+        "Missing protocols: DJI DroneID",
+        "Unexpected protocols: DJI-like OFDM",
+        "Confirmed models differ: []"
+      ],
+      "dji_mavic_air_2": [
+        "Confirmed count 0 outside [1, 1]",
+        "Missing protocols: DJI DroneID",
+        "Unexpected protocols: DJI-like OFDM",
+        "Confirmed models differ: []"
+      ]
+    }
+  },
+  {
+    "run": "mini2-centered",
+    "status": "fail",
+    "captures": 1,
+    "confirmed": 4,
+    "candidates": 10,
+    "analysis_s": 0.598250327999267,
+    "preprocessing_s": 0.0515990249987226,
+    "events": {
+      "DJI DroneID": 4
+    },
+    "failures": {
+      "dji_mini2": [
+        "Confirmed count 4 outside [8, 8]"
+      ]
+    }
+  },
+  {
+    "run": "air2-centered-low",
+    "status": "pass",
+    "captures": 1,
+    "confirmed": 1,
+    "candidates": 2,
+    "analysis_s": 0.1259796840022318,
+    "preprocessing_s": 0.01749825300066732,
+    "events": {
+      "DJI DroneID": 1
+    },
+    "failures": {}
+  },
+  {
+    "run": "air2-centered-high",
+    "status": "fail",
+    "captures": 1,
+    "confirmed": 0,
+    "candidates": 2,
+    "analysis_s": 0.13559246299701044,
+    "preprocessing_s": 0.017455740002333187,
+    "events": {
+      "DJI-like OFDM": 1
+    },
+    "failures": {
+      "dji_mavic_air_2": [
+        "Confirmed count 0 outside [1, 1]",
+        "Missing protocols: DJI DroneID",
+        "Unexpected protocols: DJI-like OFDM",
+        "Confirmed models differ: []"
+      ]
+    }
+  },
+  {
+    "run": "mini2-polyphase",
+    "status": "fail",
+    "captures": 1,
+    "confirmed": 4,
+    "candidates": 10,
+    "analysis_s": 0.604130346000602,
+    "preprocessing_s": 0.05128435799997533,
+    "events": {
+      "DJI DroneID": 4
+    },
+    "failures": {
+      "dji_mini2": [
+        "Confirmed count 4 outside [8, 8]"
+      ]
+    }
+  },
+  {
+    "run": "pilot-raw",
+    "status": "exploratory",
+    "captures": 84,
+    "confirmed": 0,
+    "candidates": 0,
+    "analysis_s": 4.682481536008709,
+    "preprocessing_s": 0.0,
+    "events": {
+      "Unknown RF": 60,
+      "DJI-like OFDM": 4,
+      "Wi-Fi-like OFDM": 9
+    },
+    "failures": {}
+  },
+  {
+    "run": "pilot-dc",
+    "status": "exploratory",
+    "captures": 84,
+    "confirmed": 0,
+    "candidates": 2,
+    "analysis_s": 7.821040517996153,
+    "preprocessing_s": 1.6681802549974236,
+    "events": {
+      "DJI-like OFDM": 18,
+      "Wi-Fi-like OFDM": 18,
+      "Unknown RF": 38,
+      "2-FSK candidate": 2
+    },
+    "failures": {}
+  },
+  {
+    "run": "pilot-channel",
+    "status": "exploratory",
+    "captures": 84,
+    "confirmed": 0,
+    "candidates": 3,
+    "analysis_s": 9.058942103005393,
+    "preprocessing_s": 7.4623886909867,
+    "events": {
+      "2-FSK candidate": 8,
+      "Wi-Fi-like OFDM": 15,
+      "Unknown RF": 25,
+      "DJI-like OFDM": 13
+    },
+    "failures": {}
+  }
+]

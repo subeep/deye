@@ -1,0 +1,874 @@
+{
+  "schema_version": 1,
+  "manifest_sha256": "e7ac3dd70bd55279ef659428cd757db5e20f38656050ebd741d01b885053f1e7",
+  "turbo_sha256": "1a56f83f7f3d83bd8e6ebe9b710299b4f5dabeca37438152c212d15b2c2a8ebf",
+  "source_sha256": {
+    "backend.py": "49ddf2a497f7f8162bd4d80e95992ee389a9fc458237f95216979f7d209ba336",
+    "benchmark.py": "c84ea38c46ee0697af843890c250745adc6dffd9f2290b50262f82912586c670",
+    "reference/Packet.py": "550a223c5dcdef347772e64b92c72cb7b86c4fc9a13619f8eee70e8072afb2a2",
+    "reference/SpectrumCapture.py": "84aad156238a18b6dc796ca271857ecb8a3a69f8e3adcbbd8641d4779056bf16",
+    "reference/droneid_packet.py": "ee77742c0cad9b4f32731ca4520926221b8866602df6f2e7ae03dbba4f940c4e",
+    "reference/goldgen.py": "b211925fee6208f2ec6c1e733c90db8a9411abcb70913ce7e871064a940be931",
+    "reference/helpers.py": "3170e19620d676d1bda2482d6c82b81e52dec7ec7b35fa5cee278202edce6d0b",
+    "reference/packetizer.py": "55a7688b0c693dd9e8e2f9e3bc245428be417d2b77202f3ea4da41c5de449a3f",
+    "reference/qpsk.py": "18de24827ce5b9ce6a7c374779d34a3dc3abf6d4ac9400cbf93620e37ef5b274",
+    "reference/zcsequence.py": "4534aac3dffbb328cc0581f3a997f28ee3ea6ed6df7e8af2fe7d921a339af267"
+  },
+  "environment": {
+    "python": "3.10.12",
+    "numpy": "1.26.4",
+    "scipy": "1.15.3",
+    "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35"
+  },
+  "chunk_ms": 20,
+  "results": [
+    {
+      "id": "dji_mini2",
+      "kind": "real",
+      "split": "development",
+      "session": "rub-dji_mini2",
+      "status": "pass",
+      "failures": [],
+      "metadata": {
+        "id": "dji_mini2",
+        "session": "rub-dji_mini2",
+        "split": "development",
+        "kind": "real",
+        "format": "cf32_le",
+        "path": "dji_mini2.fc32",
+        "sha256": "5a17913cb11cde2919347054700345c9e5595eaff7818980d332b8ac8910bc55",
+        "sample_rate_hz": 50000000,
+        "center_frequency_hz": 2444500000,
+        "metadata": {
+          "model": "Mini 2",
+          "firmware": null,
+          "controller_firmware": null,
+          "gain_db": null,
+          "antenna": null,
+          "captured_at": null,
+          "operating_state": null,
+          "frequency_note": "Replay reference center; original absolute RF center is not established."
+        },
+        "provenance": {
+          "source": "https://github.com/RUB-SysSec/DroneSecurity",
+          "commit": "9ff819843bee48fb140a0704ec78aff757896dea",
+          "license": "AGPL-3.0",
+          "note": "Already used for development; not held-out evidence."
+        },
+        "expected": {
+          "confirmed_min": 8,
+          "confirmed_max": 8,
+          "required_protocols": [
+            "DJI DroneID"
+          ],
+          "allowed_protocols": [
+            "DJI DroneID"
+          ],
+          "confirmed_models": [
+            "Mini 2"
+          ]
+        }
+      },
+      "input_sha256": "5a17913cb11cde2919347054700345c9e5595eaff7818980d332b8ac8910bc55",
+      "samples": 727500,
+      "duration_s": 0.01455,
+      "chunks": 1,
+      "confirmed": 8,
+      "candidates": 10,
+      "rejected": 0,
+      "protocols": {
+        "DJI DroneID": 8
+      },
+      "confirmed_models": [
+        "Mini 2"
+      ],
+      "first_valid_available_capture_s": 0.01455,
+      "analysis_ms": 603.8317050006299,
+      "chunk_p50_ms": 603.8317050006299,
+      "chunk_p95_ms": 603.8317050006299,
+      "realtime_factor": 41.500460824785556,
+      "packet_recovery_fraction": null,
+      "events": [
+        {
+          "protocol": "DJI DroneID",
+          "link": "Identification broadcast",
+          "evidence": "OFDM + descrambling + turbo FEC + CRC24A + payload CRC16 valid",
+          "frequency": 2444500000,
+          "power": -37.0685594972491,
+          "confirmed": true,
+          "serial": "SysSecWasHere ",
+          "model": "Mini 2",
+          "sequence": 786,
+          "latitude": 0.0,
+          "longitude": 0.0,
+          "altitude": 0.0,
+          "legacy": false,
+          "timestamp": 0.0
+        },
+        {
+          "protocol": "DJI DroneID",
+          "link": "Identification broadcast",
+          "evidence": "OFDM + descrambling + turbo FEC + CRC24A + payload CRC16 valid",
+          "frequency": 2444500000,
+          "power": -37.26376794168266,
+          "confirmed": true,
+          "serial": "SysSecWasHere ",
+          "model": "Mini 2",
+          "sequence": 787,
+          "latitude": 0.0,
+          "longitude": 0.0,
+          "altitude": 0.0,
+          "legacy": false,
+          "timestamp": 0.0
+        },
+        {
+          "protocol": "DJI DroneID",
+          "link": "Identification broadcast",
+          "evidence": "OFDM + descrambling + turbo FEC + CRC24A + payload CRC16 valid",
+          "frequency": 2444500000,
+          "power": -37.32978066698537,
+          "confirmed": true,
+          "serial": "SysSecWasHere ",
+          "model": "Mini 2",
+          "sequence": 788,
+          "latitude": 0.0,
+          "longitude": 0.0,
+          "altitude": 0.0,
+          "legacy": false,
+          "timestamp": 0.0
+        },
+        {
+          "protocol": "DJI DroneID",
+          "link": "Identification broadcast",
+          "evidence": "OFDM + descrambling + turbo FEC + CRC24A + payload CRC16 valid",
+          "frequency": 2444500000,
+          "power": -37.12283970245221,
+          "confirmed": true,
+          "serial": "SysSecWasHere ",
+          "model": "Mini 2",
+          "sequence": 789,
+          "latitude": 0.0,
+          "longitude": 0.0,
+          "altitude": 0.0,
+          "legacy": false,
+          "timestamp": 0.0
+        },
+        {
+          "protocol": "DJI DroneID",
+          "link": "Identification broadcast",
+          "evidence": "OFDM + descrambling + turbo FEC + CRC24A + payload CRC16 valid",
+          "frequency": 2444500000,
+          "power": -37.19013125815227,
+          "confirmed": true,
+          "serial": "SysSecWasHere ",
+          "model": "Mini 2",
+          "sequence": 800,
+          "latitude": 0.0,
+          "longitude": 0.0,
+          "altitude": 0.0,
+          "legacy": false,
+          "timestamp": 0.0
+        },
+        {
+          "protocol": "DJI DroneID",
+          "link": "Identification broadcast",
+          "evidence": "OFDM + descrambling + turbo FEC + CRC24A + payload CRC16 valid",
+          "frequency": 2444500000,
+          "power": -37.338363478485256,
+          "confirmed": true,
+          "serial": "SysSecWasHere ",
+          "model": "Mini 2",
+          "sequence": 804,
+          "latitude": 0.0,
+          "longitude": 0.0,
+          "altitude": 0.0,
+          "legacy": false,
+          "timestamp": 0.0
+        },
+        {
+          "protocol": "DJI DroneID",
+          "link": "Identification broadcast",
+          "evidence": "OFDM + descrambling + turbo FEC + CRC24A + payload CRC16 valid",
+          "frequency": 2444500000,
+          "power": -38.0063408538329,
+          "confirmed": true,
+          "serial": "SysSecWasHere ",
+          "model": "Mini 2",
+          "sequence": 805,
+          "latitude": 0.0,
+          "longitude": 0.0,
+          "altitude": 0.0,
+          "legacy": false,
+          "timestamp": 0.0
+        },
+        {
+          "protocol": "DJI DroneID",
+          "link": "Identification broadcast",
+          "evidence": "OFDM + descrambling + turbo FEC + CRC24A + payload CRC16 valid",
+          "frequency": 2444500000,
+          "power": -37.56843242700809,
+          "confirmed": true,
+          "serial": "SysSecWasHere ",
+          "model": "Mini 2",
+          "sequence": 806,
+          "latitude": 0.0,
+          "longitude": 0.0,
+          "altitude": 0.0,
+          "legacy": false,
+          "timestamp": 0.0
+        }
+      ]
+    },
+    {
+      "id": "dji_mavic_air_2",
+      "kind": "real",
+      "split": "development",
+      "session": "rub-dji_mavic_air_2",
+      "status": "pass",
+      "failures": [],
+      "metadata": {
+        "id": "dji_mavic_air_2",
+        "session": "rub-dji_mavic_air_2",
+        "split": "development",
+        "kind": "real",
+        "format": "cf32_le",
+        "path": "dji_mavic_air_2.fc32",
+        "sha256": "623fa40f190d3fd859ec2fd62b379ad9a01a0485db3179ae29ac2e3c7a070450",
+        "sample_rate_hz": 50000000,
+        "center_frequency_hz": 2444500000,
+        "metadata": {
+          "model": "Mavic Air 2",
+          "firmware": null,
+          "controller_firmware": null,
+          "gain_db": null,
+          "antenna": null,
+          "captured_at": null,
+          "operating_state": null,
+          "frequency_note": "Replay reference center; original absolute RF center is not established."
+        },
+        "provenance": {
+          "source": "https://github.com/RUB-SysSec/DroneSecurity",
+          "commit": "9ff819843bee48fb140a0704ec78aff757896dea",
+          "license": "AGPL-3.0",
+          "note": "Already used for development; not held-out evidence."
+        },
+        "expected": {
+          "confirmed_min": 1,
+          "confirmed_max": 1,
+          "required_protocols": [
+            "DJI DroneID"
+          ],
+          "allowed_protocols": [
+            "DJI DroneID"
+          ],
+          "confirmed_models": [
+            "Mavic Air 2"
+          ]
+        }
+      },
+      "input_sha256": "623fa40f190d3fd859ec2fd62b379ad9a01a0485db3179ae29ac2e3c7a070450",
+      "samples": 225280,
+      "duration_s": 0.0045056,
+      "chunks": 1,
+      "confirmed": 1,
+      "candidates": 3,
+      "rejected": 2,
+      "protocols": {
+        "DJI DroneID": 1
+      },
+      "confirmed_models": [
+        "Mavic Air 2"
+      ],
+      "first_valid_available_capture_s": 0.0045056,
+      "analysis_ms": 179.59084199901554,
+      "chunk_p50_ms": 179.59084199901554,
+      "chunk_p95_ms": 179.59084199901554,
+      "realtime_factor": 39.85947309992355,
+      "packet_recovery_fraction": null,
+      "events": [
+        {
+          "protocol": "DJI DroneID",
+          "link": "Identification broadcast",
+          "evidence": "OFDM + descrambling + turbo FEC + CRC24A + payload CRC16 valid",
+          "frequency": 2444500000,
+          "power": -18.862246500010265,
+          "confirmed": true,
+          "serial": "1WNBH3900201N1",
+          "model": "Mavic Air 2",
+          "sequence": 591,
+          "latitude": 51.44633393111904,
+          "longitude": 7.26721594197086,
+          "altitude": 42.97,
+          "legacy": false,
+          "timestamp": 0.0
+        }
+      ]
+    },
+    {
+      "id": "noise_2000000",
+      "kind": "synthetic",
+      "split": "development",
+      "session": "synthetic-noise_2000000",
+      "status": "pass",
+      "failures": [],
+      "metadata": {
+        "id": "noise_2000000",
+        "session": "synthetic-noise_2000000",
+        "split": "development",
+        "kind": "synthetic",
+        "format": "cf32_le",
+        "sample_rate_hz": 2000000,
+        "center_frequency_hz": 2444500000,
+        "generator": {
+          "type": "noise",
+          "seed": 2026,
+          "samples": 40000
+        },
+        "provenance": {
+          "source": "benchmark.py deterministic generator v1",
+          "note": "Synthetic non-drone fixture, not real field traffic"
+        },
+        "expected": {
+          "confirmed_min": 0,
+          "confirmed_max": 0,
+          "required_protocols": [],
+          "allowed_protocols": [
+            "Unknown RF"
+          ],
+          "confirmed_models": []
+        }
+      },
+      "input_sha256": "8ecd78d2357ccbea6a15f9d94e829299ef3a4a75bc2d34c1246f4a69005f14de",
+      "samples": 40000,
+      "duration_s": 0.02,
+      "chunks": 1,
+      "confirmed": 0,
+      "candidates": 0,
+      "rejected": 0,
+      "protocols": {},
+      "confirmed_models": [],
+      "first_valid_available_capture_s": null,
+      "analysis_ms": 10.566811000899179,
+      "chunk_p50_ms": 10.566811000899179,
+      "chunk_p95_ms": 10.566811000899179,
+      "realtime_factor": 0.528340550044959,
+      "packet_recovery_fraction": null,
+      "events": []
+    },
+    {
+      "id": "tone_2000000",
+      "kind": "synthetic",
+      "split": "development",
+      "session": "synthetic-tone_2000000",
+      "status": "pass",
+      "failures": [],
+      "metadata": {
+        "id": "tone_2000000",
+        "session": "synthetic-tone_2000000",
+        "split": "development",
+        "kind": "synthetic",
+        "format": "cf32_le",
+        "sample_rate_hz": 2000000,
+        "center_frequency_hz": 2444500000,
+        "generator": {
+          "type": "tone",
+          "seed": 2026,
+          "samples": 40000
+        },
+        "provenance": {
+          "source": "benchmark.py deterministic generator v1",
+          "note": "Synthetic non-drone fixture, not real field traffic"
+        },
+        "expected": {
+          "confirmed_min": 0,
+          "confirmed_max": 0,
+          "required_protocols": [],
+          "allowed_protocols": [
+            "Unknown RF"
+          ],
+          "confirmed_models": []
+        }
+      },
+      "input_sha256": "ee4905db60cfc016adb7b320ad8b66fabd186bc2ab087f7a5630fa2b952d1788",
+      "samples": 40000,
+      "duration_s": 0.02,
+      "chunks": 1,
+      "confirmed": 0,
+      "candidates": 0,
+      "rejected": 0,
+      "protocols": {
+        "Unknown RF": 1
+      },
+      "confirmed_models": [],
+      "first_valid_available_capture_s": null,
+      "analysis_ms": 11.495513001136715,
+      "chunk_p50_ms": 11.495513001136715,
+      "chunk_p95_ms": 11.495513001136715,
+      "realtime_factor": 0.5747756500568357,
+      "packet_recovery_fraction": null,
+      "events": [
+        {
+          "protocol": "Unknown RF",
+          "link": "Unclassified",
+          "evidence": "Occupied spectrum; insufficient protocol evidence",
+          "frequency": 2444500000,
+          "power": -19.99999969260414,
+          "confirmed": false,
+          "bandwidth": 7812.5,
+          "timestamp": 0.0
+        }
+      ]
+    },
+    {
+      "id": "silence_2000000",
+      "kind": "synthetic",
+      "split": "development",
+      "session": "synthetic-silence_2000000",
+      "status": "pass",
+      "failures": [],
+      "metadata": {
+        "id": "silence_2000000",
+        "session": "synthetic-silence_2000000",
+        "split": "development",
+        "kind": "synthetic",
+        "format": "cf32_le",
+        "sample_rate_hz": 2000000,
+        "center_frequency_hz": 2444500000,
+        "generator": {
+          "type": "silence",
+          "seed": 2026,
+          "samples": 40000
+        },
+        "provenance": {
+          "source": "benchmark.py deterministic generator v1",
+          "note": "Synthetic non-drone fixture, not real field traffic"
+        },
+        "expected": {
+          "confirmed_min": 0,
+          "confirmed_max": 0,
+          "required_protocols": [],
+          "allowed_protocols": [
+            "Unknown RF"
+          ],
+          "confirmed_models": []
+        }
+      },
+      "input_sha256": "ac2878215ad33205d1732578c89f25ededaad1b676911c540825bcf4baa42d9b",
+      "samples": 40000,
+      "duration_s": 0.02,
+      "chunks": 1,
+      "confirmed": 0,
+      "candidates": 0,
+      "rejected": 0,
+      "protocols": {},
+      "confirmed_models": [],
+      "first_valid_available_capture_s": null,
+      "analysis_ms": 0.10432899944134988,
+      "chunk_p50_ms": 0.10432899944134988,
+      "chunk_p95_ms": 0.10432899944134988,
+      "realtime_factor": 0.005216449972067494,
+      "packet_recovery_fraction": null,
+      "events": []
+    },
+    {
+      "id": "noise_4000000",
+      "kind": "synthetic",
+      "split": "development",
+      "session": "synthetic-noise_4000000",
+      "status": "pass",
+      "failures": [],
+      "metadata": {
+        "id": "noise_4000000",
+        "session": "synthetic-noise_4000000",
+        "split": "development",
+        "kind": "synthetic",
+        "format": "cf32_le",
+        "sample_rate_hz": 4000000,
+        "center_frequency_hz": 2444500000,
+        "generator": {
+          "type": "noise",
+          "seed": 2026,
+          "samples": 80000
+        },
+        "provenance": {
+          "source": "benchmark.py deterministic generator v1",
+          "note": "Synthetic non-drone fixture, not real field traffic"
+        },
+        "expected": {
+          "confirmed_min": 0,
+          "confirmed_max": 0,
+          "required_protocols": [],
+          "allowed_protocols": [
+            "Unknown RF"
+          ],
+          "confirmed_models": []
+        }
+      },
+      "input_sha256": "0cdbe8b517e6ae9706c0eeb48601576bb423c29c8fd3e38c90d5eb816c24ca3d",
+      "samples": 80000,
+      "duration_s": 0.02,
+      "chunks": 1,
+      "confirmed": 0,
+      "candidates": 0,
+      "rejected": 0,
+      "protocols": {},
+      "confirmed_models": [],
+      "first_valid_available_capture_s": null,
+      "analysis_ms": 13.884709000194562,
+      "chunk_p50_ms": 13.884709000194562,
+      "chunk_p95_ms": 13.884709000194562,
+      "realtime_factor": 0.6942354500097281,
+      "packet_recovery_fraction": null,
+      "events": []
+    },
+    {
+      "id": "tone_4000000",
+      "kind": "synthetic",
+      "split": "development",
+      "session": "synthetic-tone_4000000",
+      "status": "pass",
+      "failures": [],
+      "metadata": {
+        "id": "tone_4000000",
+        "session": "synthetic-tone_4000000",
+        "split": "development",
+        "kind": "synthetic",
+        "format": "cf32_le",
+        "sample_rate_hz": 4000000,
+        "center_frequency_hz": 2444500000,
+        "generator": {
+          "type": "tone",
+          "seed": 2026,
+          "samples": 80000
+        },
+        "provenance": {
+          "source": "benchmark.py deterministic generator v1",
+          "note": "Synthetic non-drone fixture, not real field traffic"
+        },
+        "expected": {
+          "confirmed_min": 0,
+          "confirmed_max": 0,
+          "required_protocols": [],
+          "allowed_protocols": [
+            "Unknown RF"
+          ],
+          "confirmed_models": []
+        }
+      },
+      "input_sha256": "fd147f2e2d549bcd894d541dbaeda13a09590d2b9e17794dcd8e277e98cdde6b",
+      "samples": 80000,
+      "duration_s": 0.02,
+      "chunks": 1,
+      "confirmed": 0,
+      "candidates": 0,
+      "rejected": 0,
+      "protocols": {
+        "Unknown RF": 1
+      },
+      "confirmed_models": [],
+      "first_valid_available_capture_s": null,
+      "analysis_ms": 18.026444000497577,
+      "chunk_p50_ms": 18.026444000497577,
+      "chunk_p95_ms": 18.026444000497577,
+      "realtime_factor": 0.9013222000248788,
+      "packet_recovery_fraction": null,
+      "events": [
+        {
+          "protocol": "Unknown RF",
+          "link": "Unclassified",
+          "evidence": "Occupied spectrum; insufficient protocol evidence",
+          "frequency": 2444500000,
+          "power": -20.00000009707238,
+          "confirmed": false,
+          "bandwidth": 15625.0,
+          "timestamp": 0.0
+        }
+      ]
+    },
+    {
+      "id": "silence_4000000",
+      "kind": "synthetic",
+      "split": "development",
+      "session": "synthetic-silence_4000000",
+      "status": "pass",
+      "failures": [],
+      "metadata": {
+        "id": "silence_4000000",
+        "session": "synthetic-silence_4000000",
+        "split": "development",
+        "kind": "synthetic",
+        "format": "cf32_le",
+        "sample_rate_hz": 4000000,
+        "center_frequency_hz": 2444500000,
+        "generator": {
+          "type": "silence",
+          "seed": 2026,
+          "samples": 80000
+        },
+        "provenance": {
+          "source": "benchmark.py deterministic generator v1",
+          "note": "Synthetic non-drone fixture, not real field traffic"
+        },
+        "expected": {
+          "confirmed_min": 0,
+          "confirmed_max": 0,
+          "required_protocols": [],
+          "allowed_protocols": [
+            "Unknown RF"
+          ],
+          "confirmed_models": []
+        }
+      },
+      "input_sha256": "3d00ed86b663cd1b8ac82b105257cd109412f92dca442048532439f920a7f645",
+      "samples": 80000,
+      "duration_s": 0.02,
+      "chunks": 1,
+      "confirmed": 0,
+      "candidates": 0,
+      "rejected": 0,
+      "protocols": {},
+      "confirmed_models": [],
+      "first_valid_available_capture_s": null,
+      "analysis_ms": 0.20993900034227408,
+      "chunk_p50_ms": 0.20993900034227408,
+      "chunk_p95_ms": 0.20993900034227408,
+      "realtime_factor": 0.010496950017113704,
+      "packet_recovery_fraction": null,
+      "events": []
+    },
+    {
+      "id": "noise_25000000",
+      "kind": "synthetic",
+      "split": "development",
+      "session": "synthetic-noise_25000000",
+      "status": "pass",
+      "failures": [],
+      "metadata": {
+        "id": "noise_25000000",
+        "session": "synthetic-noise_25000000",
+        "split": "development",
+        "kind": "synthetic",
+        "format": "cf32_le",
+        "sample_rate_hz": 25000000,
+        "center_frequency_hz": 2444500000,
+        "generator": {
+          "type": "noise",
+          "seed": 2026,
+          "samples": 500000
+        },
+        "provenance": {
+          "source": "benchmark.py deterministic generator v1",
+          "note": "Synthetic non-drone fixture, not real field traffic"
+        },
+        "expected": {
+          "confirmed_min": 0,
+          "confirmed_max": 0,
+          "required_protocols": [],
+          "allowed_protocols": [
+            "Unknown RF"
+          ],
+          "confirmed_models": []
+        }
+      },
+      "input_sha256": "df7060a0cdafa36a41b9537a43c48fcac2fa1307704bedc85e261a4465926457",
+      "samples": 500000,
+      "duration_s": 0.02,
+      "chunks": 1,
+      "confirmed": 0,
+      "candidates": 0,
+      "rejected": 0,
+      "protocols": {},
+      "confirmed_models": [],
+      "first_valid_available_capture_s": null,
+      "analysis_ms": 11.138379999465542,
+      "chunk_p50_ms": 11.138379999465542,
+      "chunk_p95_ms": 11.138379999465542,
+      "realtime_factor": 0.5569189999732771,
+      "packet_recovery_fraction": null,
+      "events": []
+    },
+    {
+      "id": "tone_25000000",
+      "kind": "synthetic",
+      "split": "development",
+      "session": "synthetic-tone_25000000",
+      "status": "pass",
+      "failures": [],
+      "metadata": {
+        "id": "tone_25000000",
+        "session": "synthetic-tone_25000000",
+        "split": "development",
+        "kind": "synthetic",
+        "format": "cf32_le",
+        "sample_rate_hz": 25000000,
+        "center_frequency_hz": 2444500000,
+        "generator": {
+          "type": "tone",
+          "seed": 2026,
+          "samples": 500000
+        },
+        "provenance": {
+          "source": "benchmark.py deterministic generator v1",
+          "note": "Synthetic non-drone fixture, not real field traffic"
+        },
+        "expected": {
+          "confirmed_min": 0,
+          "confirmed_max": 0,
+          "required_protocols": [],
+          "allowed_protocols": [
+            "Unknown RF"
+          ],
+          "confirmed_models": []
+        }
+      },
+      "input_sha256": "1aa565c0e22c28328e111c67b80388e55465a6a56566f2e13ce46332bb051ee2",
+      "samples": 500000,
+      "duration_s": 0.02,
+      "chunks": 1,
+      "confirmed": 0,
+      "candidates": 0,
+      "rejected": 0,
+      "protocols": {
+        "Unknown RF": 1
+      },
+      "confirmed_models": [],
+      "first_valid_available_capture_s": null,
+      "analysis_ms": 43.15508900072018,
+      "chunk_p50_ms": 43.15508900072018,
+      "chunk_p95_ms": 43.15508900072018,
+      "realtime_factor": 2.157754450036009,
+      "packet_recovery_fraction": null,
+      "events": [
+        {
+          "protocol": "Unknown RF",
+          "link": "Unclassified",
+          "evidence": "Occupied spectrum; insufficient protocol evidence",
+          "frequency": 2444500000,
+          "power": -20.00000171494574,
+          "confirmed": false,
+          "bandwidth": 73242.1875,
+          "timestamp": 0.0
+        }
+      ]
+    },
+    {
+      "id": "silence_25000000",
+      "kind": "synthetic",
+      "split": "development",
+      "session": "synthetic-silence_25000000",
+      "status": "pass",
+      "failures": [],
+      "metadata": {
+        "id": "silence_25000000",
+        "session": "synthetic-silence_25000000",
+        "split": "development",
+        "kind": "synthetic",
+        "format": "cf32_le",
+        "sample_rate_hz": 25000000,
+        "center_frequency_hz": 2444500000,
+        "generator": {
+          "type": "silence",
+          "seed": 2026,
+          "samples": 500000
+        },
+        "provenance": {
+          "source": "benchmark.py deterministic generator v1",
+          "note": "Synthetic non-drone fixture, not real field traffic"
+        },
+        "expected": {
+          "confirmed_min": 0,
+          "confirmed_max": 0,
+          "required_protocols": [],
+          "allowed_protocols": [
+            "Unknown RF"
+          ],
+          "confirmed_models": []
+        }
+      },
+      "input_sha256": "8dbe5f139fd946d4cd84e8cc612cd9f68cbc87e394457884acc0c5dad56dd8dd",
+      "samples": 500000,
+      "duration_s": 0.02,
+      "chunks": 1,
+      "confirmed": 0,
+      "candidates": 0,
+      "rejected": 0,
+      "protocols": {},
+      "confirmed_models": [],
+      "first_valid_available_capture_s": null,
+      "analysis_ms": 6.213440999999875,
+      "chunk_p50_ms": 6.213440999999875,
+      "chunk_p95_ms": 6.213440999999875,
+      "realtime_factor": 0.31067204999999376,
+      "packet_recovery_fraction": null,
+      "events": []
+    },
+    {
+      "id": "generic_css",
+      "kind": "synthetic",
+      "split": "development",
+      "session": "synthetic-css",
+      "status": "pass",
+      "failures": [],
+      "metadata": {
+        "id": "generic_css",
+        "session": "synthetic-css",
+        "split": "development",
+        "kind": "synthetic",
+        "format": "cf32_le",
+        "sample_rate_hz": 2000000,
+        "center_frequency_hz": 915000000,
+        "generator": {
+          "type": "css",
+          "seed": 2026,
+          "samples": 40000
+        },
+        "provenance": {
+          "source": "benchmark.py deterministic generator v1",
+          "note": "Repeated generic LoRa chirps; not ELRS packets"
+        },
+        "expected": {
+          "confirmed_min": 0,
+          "confirmed_max": 0,
+          "required_protocols": [
+            "LoRa CSS / ELRS candidate"
+          ],
+          "allowed_protocols": [
+            "LoRa CSS / ELRS candidate"
+          ],
+          "confirmed_models": []
+        }
+      },
+      "input_sha256": "ee5e6f435eed994cae271410c64388a1dc8be14b1fab863e8b827b03cfddb76c",
+      "samples": 40000,
+      "duration_s": 0.02,
+      "chunks": 1,
+      "confirmed": 0,
+      "candidates": 0,
+      "rejected": 0,
+      "protocols": {
+        "LoRa CSS / ELRS candidate": 1
+      },
+      "confirmed_models": [],
+      "first_valid_available_capture_s": null,
+      "analysis_ms": 2.891829999498441,
+      "chunk_p50_ms": 2.891829999498441,
+      "chunk_p95_ms": 2.891829999498441,
+      "realtime_factor": 0.14459149997492204,
+      "packet_recovery_fraction": null,
+      "events": [
+        {
+          "protocol": "LoRa CSS / ELRS candidate",
+          "link": "Control / telemetry candidate",
+          "evidence": "Repeated dechirped preamble, SF7, BW 500 kHz; packet CRC/UID not decoded",
+          "frequency": 915000000,
+          "power": -20.165598066723923,
+          "confirmed": false,
+          "bandwidth": 500000,
+          "score": 0.9865989091087703,
+          "timestamp": 0.0
+        }
+      ]
+    }
+  ],
+  "status": "pass"
+}

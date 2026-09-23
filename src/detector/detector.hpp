@@ -1,5 +1,6 @@
 #pragma once
 #include <atomic>
+#include <chrono>
 #include <complex>
 #include <condition_variable>
 #include <cstdint>
@@ -20,14 +21,16 @@ struct Snapshot {
     std::string status{"Idle"};
     bool ready{};
     uint64_t samples{}, dropped{}, candidates{}, rejected{}, decoded{};
-    double processing_ms{};
+    double processing_ms{}, preprocessing_ms{}, queue_age_ms{}, oldest_queue_ms{}, end_to_end_ms{};
+    size_t queue_depth{};
+    uint64_t discontinuities{}, partial_discarded{}, stop_discarded{}, analysis_errors{};
     std::vector<Observation> observations;
 };
 class Detector {
 public:
     Detector() = default;
     ~Detector();
-    void start();
+    void start(bool dc_block=false);
     void stop();
     bool running() const { return running_; }
     void submit(const std::complex<float>* data, size_t count, double rate,
@@ -38,6 +41,7 @@ private:
         std::vector<std::complex<float>> data;
         double rate{}, frequency{}, timestamp{};
         uint64_t epoch{};
+        std::chrono::steady_clock::time_point enqueued;
     };
     void run();
     void status(const std::string& message, bool ready=false);
@@ -48,5 +52,6 @@ private:
     std::condition_variable wake_;
     std::deque<Chunk> queue_;
     Snapshot snapshot_;
+    bool dc_block_{false};
 };
 }

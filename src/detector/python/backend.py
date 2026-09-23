@@ -281,8 +281,12 @@ def main():
     parser.add_argument("--input")
     parser.add_argument("--rate", type=float, default=50e6)
     parser.add_argument("--frequency", type=float, default=2444.5e6)
+    parser.add_argument("--dc-block", action="store_true")
     args = parser.parse_args()
     analyzer = Analyzer(args.turbo)
+    if args.dc_block:
+        from preprocessing import PreparedAnalyzer
+        analyzer = PreparedAnalyzer(analyzer, dc_block=True)
     if args.input:
         with open(args.input, "rb") as stream:
             position = 0

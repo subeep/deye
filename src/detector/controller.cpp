@@ -13,13 +13,21 @@ void Controller::tick(AppState& s, UsrpWorker& radio, bool recording) {
     using Clock=std::chrono::steady_clock;
     auto now=Clock::now();
     s.dd_recording_busy=recording;
+    const double requested_rate=s.dd_use_custom_rate ? s.dd_sample_rate_msps*1e6
+        : profiles().at(s.dd_profile).rate;
+    if ((s.dd_connect_requested || s.dd_start_requested) &&
+        (!std::isfinite(requested_rate) || requested_rate<1e5 || requested_rate>100e6)) {
+        s.dd_connect_requested=false;
+        s.dd_start_requested=false;
+        s.dd_status_msg="Sample rate must be between 0.1 and 100 MS/s.";
+    }
     if (s.dd_connect_requested) {
         s.dd_connect_requested=false;
         if (!recording && !radio.is_connected()) {
             const auto& profile=profiles().at(s.dd_profile);
             s.dd_target_hz=s.dd_use_custom_freq ? s.dd_custom_freq_mhz*1e6
                 : profile.channels.at(s.dd_profile_channel);
-            radio.set_sample_rate(profile.rate);
+            radio.set_sample_rate(requested_rate);
             radio.set_gain(s.dd_gain_db);
             radio.set_freq(s.dd_target_hz);
             if (!radio.connect("addr=192.168.10.2")) s.dd_status_msg=radio.get_last_error();
@@ -39,7 +47,7 @@ void Controller::tick(AppState& s, UsrpWorker& radio, bool recording) {
             }
             position_=s.dd_mode==0 ? static_cast<size_t>(s.dd_profile_channel) : 0;
             if (s.dd_use_custom_freq) { sequence_={s.dd_custom_freq_mhz*1e6}; position_=0; }
-            radio.set_sample_rate(profile.rate);
+            radio.set_sample_rate(requested_rate);
             radio.set_gain(s.dd_gain_db);
             s.dd_target_hz=sequence_.at(position_);
             radio.set_freq(s.dd_target_hz);
@@ -49,12 +57,32 @@ void Controller::tick(AppState& s, UsrpWorker& radio, bool recording) {
                 s.dd_status_msg="USRP sample rate is too low for this profile.";
                 s.dd_stop_requested=true;
             } else {
-                detector_.start(); radio.detector_active=true; active_=true;
+                overflow_base_=radio.detector_rx_overflows.load();
+                timeout_base_=radio.detector_rx_timeouts.load(); error_base_=radio.detector_rx_errors.load();
+                settle_base_=radio.detector_settle_skipped.load(); settle_ns_base_=radio.detector_settle_ns.load();
+                away_seconds_.assign(sequence_.size(),0.);
+                now=Clock::now();
+                coverage_tick_=now; previous_frequency_=radio.get_freq();
+                s.dd_scan_elapsed_s=0; s.dd_channel_away_s=0;
+                detector_.start(s.dd_dc_block); radio.detector_active=true; active_=true;
                 last_decoded_=0; tuned_=false;
                 tune_deadline_=now+std::chrono::seconds(3);
                 s.dd_status_msg="Starting receiver...";
             }
         }
+    }
+    if (active_) {
+        s.dd_rx_overflows=radio.detector_rx_overflows.load()-overflow_base_;
+        s.dd_rx_timeouts=radio.detector_rx_timeouts.load()-timeout_base_;
+        s.dd_rx_errors=radio.detector_rx_errors.load()-error_base_;
+        s.dd_settle_skipped=radio.detector_settle_skipped.load()-settle_base_;
+        s.dd_settle_seconds=(radio.detector_settle_ns.load()-settle_ns_base_)/1e9;
+        const double elapsed=std::chrono::duration<double>(now-coverage_tick_).count();
+        s.dd_scan_elapsed_s+=elapsed;
+        for (size_t i=0;i<sequence_.size();++i)
+            if (std::abs(previous_frequency_-sequence_[i])>=5000) away_seconds_[i]+=elapsed;
+        coverage_tick_=now; previous_frequency_=radio.get_freq();
+        s.dd_channel_away_s=away_seconds_.at(position_);
     }
     if (active_ && (!radio.is_connected() || recording || !detector_.running())) {
         s.dd_stop_requested=true;
@@ -96,6 +124,7 @@ void Controller::tick(AppState& s, UsrpWorker& radio, bool recording) {
             tuned_=false; tune_deadline_=now+std::chrono::seconds(3);
         }
         s.dd_scan_position=position_;
+        s.dd_channel_away_s=away_seconds_.at(position_);
     }
     s.dd_detection_running=active_;
 }

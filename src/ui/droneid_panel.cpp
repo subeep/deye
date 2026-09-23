@@ -5,6 +5,7 @@
 #include "implot.h"
 #include <algorithm>
 #include <cstdio>
+#include <cmath>
 
 static void Section(const char* text) {
     ImGui::Spacing();
@@ -69,7 +70,22 @@ static void Config(AppState& s, const UsrpWorker* radio) {
     Section("RECEIVER");
     ImGui::SetNextItemWidth(-1);
     ImGui::SliderFloat("##gain",&s.dd_gain_db,0,31.5f,"Gain: %.1f dB");
-    ImGui::Text("Requested sample rate: %.2f MS/s",profile.rate/1e6);
+    if (ImGui::Checkbox("Custom sample rate", &s.dd_use_custom_rate) && s.dd_use_custom_rate)
+        s.dd_sample_rate_msps=static_cast<float>(profile.rate/1e6);
+    if (s.dd_use_custom_rate) {
+        ImGui::TextUnformatted("Sample rate (MS/s)");
+        ImGui::SetNextItemWidth(-1);
+        ImGui::InputFloat("##detector_sample_rate", &s.dd_sample_rate_msps, 1.0f, 5.0f, "%.3f");
+        if (!std::isfinite(s.dd_sample_rate_msps)) s.dd_sample_rate_msps=static_cast<float>(profile.rate/1e6);
+        s.dd_sample_rate_msps=std::clamp(s.dd_sample_rate_msps, .1f, 100.f);
+        ImGui::TextWrapped("Applied on Connect or Start. Hardware may adjust the rate.");
+        if (profile.rate>=15e6 && s.dd_sample_rate_msps<15.26f)
+            ImGui::TextWrapped("This profile requires at least 15.26 MS/s to start detection.");
+    } else {
+        ImGui::Text("Sample rate: %.2f MS/s (profile)",profile.rate/1e6);
+    }
+    ImGui::Checkbox("DC correction (experimental)", &s.dd_dc_block);
+    if (ImGui::IsItemHovered()) ImGui::SetTooltip("Streaming 1 kHz DC blocker; initializes from 4096 samples after gaps. Applied on Start.");
     ImGui::EndDisabled();
     if (connected) {
         ImGui::Text("Actual: %.4f MHz / %.3f MS/s",radio->get_freq()/1e6,radio->get_sample_rate()/1e6);
@@ -92,6 +108,19 @@ static void Results(AppState& s) {
     Section("LIVE ANALYSIS");
     ImGui::Text("Analyzed %.2f M samples  |  Queue drops %.2f M  |  Last batch %.1f ms",
                 stats.samples/1e6,stats.dropped/1e6,stats.processing_ms);
+    ImGui::Text("Queue: %zu blocks | Oldest: %.1f ms | Last batch wait: %.1f ms",
+        stats.queue_depth,stats.oldest_queue_ms,stats.queue_age_ms);
+    ImGui::Text("Last batch age at result: %.1f ms | Preprocessing: %.1f ms",
+        stats.end_to_end_ms,stats.preprocessing_ms);
+    ImGui::Text("RX events: %llu overflow / %llu timeout / %llu other error",
+        (unsigned long long)s.dd_rx_overflows,(unsigned long long)s.dd_rx_timeouts,(unsigned long long)s.dd_rx_errors);
+    ImGui::Text("Continuity breaks: %llu | Partial batches discarded: %.3f M samples | Analysis errors: %llu",
+        (unsigned long long)stats.discontinuities,stats.partial_discarded/1e6,(unsigned long long)stats.analysis_errors);
+    ImGui::Text("Tuning settle skips: %.3f M samples (%.3f s) | Stop discards: %.3f M",
+        s.dd_settle_skipped/1e6,s.dd_settle_seconds,stats.stop_discarded/1e6);
+    ImGui::Text("Current scan target: away %.2f / %.2f s (UI-sampled tune coverage)",
+        s.dd_channel_away_s,s.dd_scan_elapsed_s);
+    if (ImGui::IsItemHovered()) ImGui::SetTooltip("Cumulative time tuned away from the current target, sampled each UI tick. Excludes settling and queue loss; not packet coverage. RX events do not measure exact missing samples.");
     ImGui::Text("DJI candidates: %llu  |  Rejected: %llu  |  Valid packets: %llu",
                 (unsigned long long)stats.candidates,(unsigned long long)stats.rejected,(unsigned long long)stats.decoded);
     if (stats.processing_ms>20) ImGui::TextColored(ImVec4(1,.75f,.35f,1),"Decoder is slower than the 20 ms input window; monitor dropped samples.");

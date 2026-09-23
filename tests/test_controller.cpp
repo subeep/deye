@@ -34,10 +34,16 @@ int main() {
     // Recording takes ownership: no restore/tune is allowed once it is active.
     state.dd_start_requested=true;
     controller.tick(state,radio,false);
+    radio.detector_rx_overflows+=2;
+    radio.detector_rx_timeouts+=1;
+    radio.detector_settle_skipped+=50000;
+    radio.detector_settle_ns+=2000000;
     auto recording_frequency=radio.get_freq();
     controller.tick(state,radio,true);
     check(!state.dd_detection_running && radio.get_freq()==recording_frequency);
     check(radio.get_sample_rate()==25e6 && !radio.detector_active);
+    check(state.dd_rx_overflows==2 && state.dd_rx_timeouts==1);
+    check(state.dd_settle_skipped==50000 && std::abs(state.dd_settle_seconds-.002)<1e-9);
     // Connecting from the detector also uses its selected profile, not 433 MHz.
     AppState fresh;
     UsrpWorker disconnected;
@@ -45,5 +51,27 @@ int main() {
     fresh.dd_connect_requested=true;
     controller.tick(fresh,disconnected,false);
     check(disconnected.get_freq()==2414.5e6 && disconnected.get_sample_rate()==25e6);
+    // Custom rate applies both at connection and when starting detection.
+    AppState custom;
+    UsrpWorker custom_radio;
+    custom.dd_use_custom_rate=true;
+    custom.dd_sample_rate_msps=50;
+    custom.dd_connect_requested=true;
+    controller.tick(custom,custom_radio,false);
+    check(custom_radio.get_sample_rate()==50e6);
+    custom.dd_sample_rate_msps=20;
+    custom.dd_start_requested=true;
+    controller.tick(custom,custom_radio,false);
+    check(custom.dd_detection_running && custom_radio.get_sample_rate()==20e6);
+    custom.dd_stop_requested=true;
+    controller.tick(custom,custom_radio,false);
+    custom.dd_sample_rate_msps=2;
+    custom.dd_start_requested=true;
+    controller.tick(custom,custom_radio,false);
+    check(!custom.dd_detection_running && custom.dd_status_msg=="USRP sample rate is too low for this profile.");
+    custom.dd_sample_rate_msps=101;
+    custom.dd_start_requested=true;
+    controller.tick(custom,custom_radio,false);
+    check(!custom.dd_detection_running && custom_radio.get_sample_rate()==2e6);
     std::cout << "Recording exclusion, retained detector tuning and profile connection passed\n";
 }

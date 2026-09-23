@@ -89,6 +89,9 @@ public:
                                             double, double, double, uint64_t)>;
     void set_detector_sink(DetectorSink sink);
     std::atomic<bool> detector_active{false};
+    // Detector-session deltas are taken by Controller; never infer lost samples from event counts.
+    std::atomic<uint64_t> detector_rx_overflows{0}, detector_rx_timeouts{0}, detector_rx_errors{0};
+    std::atomic<uint64_t> detector_settle_skipped{0}, detector_settle_ns{0};
 
 private:
     void rx_thread_func();

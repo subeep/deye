@@ -20,6 +20,15 @@ class DetectorTests(unittest.TestCase):
     def capture(self, name):
         return np.fromfile(ROOT / "tests/data" / name, "<c8")
 
+    def test_channelized_mavic_air(self):
+        from preprocessing import PreparedAnalyzer
+        a = PreparedAnalyzer(self.analyzer(), dc_block=True, shift_hz=-12.5e6, output_rate_hz=25e6)
+        result = a.analyze(self.capture("dji_mavic_air_2.fc32"), 50e6, 2444.5e6)
+        valid = [e for e in result['events'] if e['confirmed']]
+        self.assertEqual(len(valid), 1)
+        self.assertEqual(valid[0]['model'], 'Mavic Air 2')
+        self.assertEqual(valid[0]['sequence'], 591)
+
     def test_mavic_air_real_capture(self):
         result = self.analyzer().analyze(self.capture("dji_mavic_air_2.fc32"), 50e6, 2444.5e6)
         confirmed = [e for e in result["events"] if e["confirmed"]]

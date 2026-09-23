@@ -54,6 +54,9 @@ struct AppState {
     bool dd_use_custom_freq{false};
     float dd_custom_freq_mhz{2414.5f};
     float dd_gain_db{30.0f};
+    bool dd_use_custom_rate{false};
+    bool dd_dc_block{false};
+    float dd_sample_rate_msps{25.0f};
     bool dd_detection_running{false};
     std::string dd_status_msg{"Idle. Select a link profile to begin."};
     int dd_profile{0};
@@ -70,6 +73,8 @@ struct AppState {
     size_t dd_scan_position{0};
     double dd_target_hz{0};
     double dd_actual_rate{0};
+    uint64_t dd_rx_overflows{}, dd_rx_timeouts{}, dd_rx_errors{}, dd_settle_skipped{};
+    double dd_settle_seconds{}, dd_scan_elapsed_s{}, dd_channel_away_s{};
     float dd_observations_height{420.0f};
 
     AppState() {

@@ -75,6 +75,7 @@ def resample(pkt_fullrate, Fs: float, Fsnew: float ):
     return np.interp(np.arange(0, len(pkt_fullrate), Fs/Fsnew),
             np.arange(0, len(pkt_fullrate)), pkt_fullrate)
 
+
 def consecutive(data, stepsize=1):
     return np.split(data, np.where(np.diff(data) != stepsize)[0]+1)
 
