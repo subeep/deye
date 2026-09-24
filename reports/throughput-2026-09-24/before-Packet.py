@@ -10,9 +10,8 @@ from helpers import corr, fshift, tfft, itfft, with_sample_offset, NFFT, MAXNCAR
 
 class Packet:
     """Demodulate frames from raw samples to QPSK data"""
-    def __init__(self, raw_samples, Fs=15.36e6, enable_zc_detection=True, debug=False, legacy = False, packet_type = "droneid", fast_timing=False):
+    def __init__(self, raw_samples, Fs=15.36e6, enable_zc_detection=True, debug=False, legacy = False, packet_type = "droneid"):
         self.debug = debug
-        self.fast_timing = fast_timing
         self.NCARRIERS = NCARRIERS
         self.MAXNCARRIERS = MAXNCARRIERS
 
@@ -243,31 +242,19 @@ class Packet:
         # Equivalent to the reference's 1000 complete nine-symbol transforms.
         offsets = np.linspace(-15, 15, 1000)
         start = sum(NFFT + n for n in self.CP_LENGTHS[:symbol_idx]) + self.CP_LENGTHS[symbol_idx]
-        def metric(trial_offsets):
-            positions = start + trial_offsets[:, None] + np.arange(NFFT)[None, :]
-            windows = np.interp(positions, np.arange(len(samples)), samples)
-            transformed = np.fft.fft(windows, n=NFFT, axis=1)
-            carriers = np.concatenate((transformed[:, -NCARRIERS//2+1:],
-                                       transformed[:, :NCARRIERS//2+1]), axis=1)
-            zero_rows = (carriers == 0).any(axis=1)
-            carriers[zero_rows] += 1
-            differences = np.angle(a[None, :] / carriers)
-            differences[:, NCARRIERS//2] = differences[:, NCARRIERS//2+1]
-            differences = np.unwrap(differences, axis=1)
-            differences -= differences.mean(axis=1, keepdims=True)
-            return np.sqrt(np.mean(differences**2, axis=1))
-
-        if self.fast_timing:
-            # Search the same grid coarsely, then refine around the best basin.
-            # The decoder retains the exhaustive search if packet validation fails.
-            coarse = np.unique(np.r_[np.arange(0, len(offsets), 20), len(offsets)-1])
-            best = coarse[np.argmin(metric(offsets[coarse]))]
-            fine = np.arange(max(0,best-20),min(len(offsets),best+21))
-            resx = offsets[fine]
-            resy = metric(resx)
-        else:
-            resx = offsets
-            resy = metric(resx)
+        positions = start + offsets[:, None] + np.arange(NFFT)[None, :]
+        windows = np.interp(positions, np.arange(len(samples)), samples)
+        transformed = np.fft.fft(windows, n=NFFT, axis=1)
+        carriers = np.concatenate((transformed[:, -NCARRIERS//2+1:],
+                                   transformed[:, :NCARRIERS//2+1]), axis=1)
+        zero_rows = (carriers == 0).any(axis=1)
+        carriers[zero_rows] += 1
+        differences = np.angle(a[None, :] / carriers)
+        differences[:, NCARRIERS//2] = differences[:, NCARRIERS//2+1]
+        differences = np.unwrap(differences, axis=1)
+        differences -= differences.mean(axis=1, keepdims=True)
+        resx = offsets
+        resy = np.sqrt(np.mean(differences**2, axis=1))
 
         if self.debug:
             plt.title("RMS for ZC sequence")

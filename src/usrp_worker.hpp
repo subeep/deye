@@ -74,6 +74,7 @@ public:
     double get_freq() const { return current_freq_.load(); }
     double get_gain() const { return current_gain_.load(); }
     double get_sample_rate() const { return current_rate_.load(); }
+    uint64_t get_detector_epoch() const { return detector_epoch_.load(); }
     int    get_channel() const { return current_channel_.load(); }
 
     std::string get_last_error() const { return last_error_; }
@@ -139,6 +140,6 @@ private:
     std::string last_error_;
     std::mutex detector_mutex_;
     DetectorSink detector_sink_;
-    uint64_t detector_epoch_{0}; // receive thread / stopped-stream updates only
+    std::atomic<uint64_t> detector_epoch_{0}; // receive thread / stopped-stream updates only
     size_t detector_settle_samples_{0};
 };

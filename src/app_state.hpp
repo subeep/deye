@@ -58,6 +58,8 @@ struct AppState {
     bool dd_dc_block{false};
     float dd_sample_rate_msps{25.0f};
     bool dd_detection_running{false};
+    bool dd_hold_active{false};
+    double dd_dwell_remaining_s{};
     std::string dd_status_msg{"Idle. Select a link profile to begin."};
     int dd_profile{0};
     int dd_mode{0}; // fixed, channel scan, hold on validated DJI, ELRS reconstructed order

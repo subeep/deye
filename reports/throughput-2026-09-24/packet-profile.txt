@@ -1,0 +1,26 @@
+         714395 function calls (714347 primitive calls) in 1.121 seconds
+
+   Ordered by: cumulative time
+   List reduced from 418 to 18 due to restriction <18>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        2    0.000    0.000    1.121    0.561 /home/sudeep/Pictures/Drone_recorder./src/detector/python/benchmark.py:127(run_capture)
+        2    0.004    0.002    1.104    0.552 /home/sudeep/Pictures/Drone_recorder./src/detector/python/backend.py:220(analyze)
+       13    0.001    0.000    0.952    0.073 /home/sudeep/Pictures/Drone_recorder./src/detector/python/backend.py:198(decode_frame)
+       17    0.015    0.001    0.735    0.043 /home/sudeep/Pictures/Drone_recorder./src/detector/python/reference/Packet.py:13(__init__)
+       17    0.140    0.008    0.685    0.040 /home/sudeep/Pictures/Drone_recorder./src/detector/python/reference/Packet.py:231(find_zc_offset)
+       34    0.110    0.003    0.182    0.005 /home/sudeep/.local/lib/python3.10/site-packages/numpy/lib/function_base.py:1663(unwrap)
+       54    0.043    0.001    0.174    0.003 /home/sudeep/Pictures/Drone_recorder./src/detector/python/reference/qpsk.py:69(raw_data_to_symbol_bits)
+      816    0.001    0.000    0.129    0.000 /home/sudeep/.local/lib/python3.10/site-packages/numpy/fft/_pocketfft.py:49(_raw_fft)
+      663    0.001    0.000    0.129    0.000 /home/sudeep/.local/lib/python3.10/site-packages/numpy/fft/_pocketfft.py:122(fft)
+      816    0.128    0.000    0.128    0.000 {built-in method numpy.fft._pocketfft_internal.execute}
+   227178    0.115    0.000    0.122    0.000 /home/sudeep/Pictures/Drone_recorder./src/detector/python/reference/qpsk.py:46(get_symbol_bits)
+       68    0.119    0.002    0.119    0.002 /home/sudeep/.local/lib/python3.10/site-packages/numpy/lib/function_base.py:1606(angle)
+       28    0.032    0.001    0.116    0.004 /home/sudeep/.local/lib/python3.10/site-packages/scipy/signal/_spectral_py.py:1863(_spectral_helper)
+       26    0.001    0.000    0.112    0.004 /home/sudeep/Pictures/Drone_recorder./src/detector/python/reference/helpers.py:96(estimate_offset)
+       81    0.000    0.000    0.112    0.001 /home/sudeep/.local/lib/python3.10/site-packages/numpy/lib/function_base.py:1461(interp)
+       81    0.112    0.001    0.112    0.001 {built-in method numpy.core._multiarray_umath.interp_complex}
+       26    0.000    0.000    0.109    0.004 /home/sudeep/.local/lib/python3.10/site-packages/scipy/signal/_spectral_py.py:490(welch)
+       26    0.000    0.000    0.109    0.004 /home/sudeep/.local/lib/python3.10/site-packages/scipy/signal/_spectral_py.py:660(csd)
+
+

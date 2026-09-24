@@ -1,6 +1,6 @@
 # Drone detector — plan, decisions and progress
 
-Updated: 2026-09-23.
+Updated: 2026-09-24.
 Task checklist: [DETECTOR_TODO.md](DETECTOR_TODO.md).
 Current implementation guide: [DETECTOR.md](DETECTOR.md).
 
@@ -20,11 +20,11 @@ firmware is a separate future component; it does not turn the detector into a tr
 | Area | Status | Evidence / remaining limit |
 | --- | --- | --- |
 | DJI DroneID | Implemented; validated on two published captures | Mini 2: eight valid packets; Mavic Air 2: one. CRC24A and CRC16 required. Not universal DJI coverage. |
-| User's Mini 2 | User reports successful detection on 2026-09-23 | Exact session, firmware and validated-ID evidence not yet archived; do not count as a measured performance benchmark. |
+| User's Mini 2 | Screenshot shows four validated packets; later test logged two | Initial linked/target-off IQ captured; those short IQ samples decode no IDs. Firmware and independent field benchmark remain pending. |
 | DIY classification | Waveform candidates only | CSS/FSK/OFDM/FM-video tests; no validated ELRS/FrSky/FlySky packet decoder yet. |
 | Hopping | Scan lists and seeded ELRS order reconstruction | Upstream sequence comparison passed; no synchronized RF hop following. |
 | X310 | Live receive/retune demonstrated | Earlier optimized smoke run analyzed about 66.2M samples, dropped about 12.0M detector-queue samples; no live DJI ID in that short run. |
-| Automated tests | Seven suites pass (2026-09-23, 8.17 s) | Adds preprocessing, real channelized Air 2, DC worker, gap accounting and 100 MS/s batch-limit checks. All 12 raw/DC replay cases pass. |
+| Automated tests | Seven suites pass (2026-09-24, 13.62 s) | Includes 20/25 MS/s known DJI, carrier correction, exhaustive fallback, fresh-hold evidence and epoch propagation. All 12 raw/DC replay cases pass. |
 | DroneDetect_V2 | Read-only audit and bounded pilot implemented | 390 files audited; 84 windows from 28 ON recordings replayed, zero validated IDs. Acquisition metadata remains provisional; no accuracy claim or classifier training. |
 | UI/radio fixes | Implemented and rebuilt | Stop retains detector RF settings; detector connect uses selected profile; observations default to 420 px and resize by divider. |
 | Heltec / Nucleo / LR2021 | User has hardware; integration pending | No board flashed, wired or validated by this project. Exact Heltec RF variant and LR2021 module pinout required. |
@@ -447,3 +447,73 @@ when needed; no immediate LR2021-to-Nucleo wiring is requested.
 - Validation: project builds; seven CTest suites pass (8.17 s). New tests cover DC rejection, in-band preservation/out-of-band alias suppression, mixing direction, streaming chunk equivalence, output timing, gap/retune/epoch reset, invalid configurations, known channelized Air 2 packet, DC subprocess decoding, continuity discards, receiver-counter deltas and 100 MS/s batch bounds. No interactive GUI or physical RF test was performed.
 - Status: DD04 partially complete, pending reduced-rate Mini 2 acceptance; S04 implemented in software, pending live counter/coverage validation. DD01 corroborated but not fully closed. No classifier training.
 - Next: diagnose Mini 2 channelized packet failures before enabling live channelization. The independent Mini 2 checkpoint can now use raw/DC modes: connect X310 and Mini 2/controller, archive firmware/settings and collect labeled positive plus drone-free sessions. Heltec/Nucleo/LR2021 are still not needed for this checkpoint.
+
+
+### 2026-09-24 — Reduced-rate Mini 2 fixed; connected X310 health runs
+
+- User authorized continuation, then confirmed X310 connected, Mini 2 available and controller on/linked. Ethernet 192.168.10.1 reached X310 192.168.10.2; no running Recorder process owned the radio. Firmware, antenna model/range and actual aircraft emission band remain unknown.
+- Root cause isolated with per-packet diagnostics: channelization changed coarse frequency centering, exposing the modulo-15-kHz ambiguity of cyclic-prefix fine carrier estimation. Applying one adjacent-carrier correction recovered the previously failing packets.
+- `Analyzer.decode_frame` now tests 0, +15 kHz and -15 kHz corrections at the internal 15.36 MS/s packet rate, with at most four QPSK rotations each. Existing turbo CRC24A, payload CRC16, length/version and serial checks remain required. Frames are copied before in-place demodulation. Accepted events retain `carrier_correction_hz`. Retries are bounded but can add cost to rejected candidates.
+- Strict channelized Mini 2 regression now passes: all eight original sequences at +9.6 MHz shift, input 50 MS/s → output 25 MS/s with DC enabled. Added tests for both injected ±15 kHz ambiguities and exact Mini 2 sequence set. Air 2 channelized regression stays valid. No lowered expectations, generated identities or dataset-label promotion.
+- Final verification: all seven CTest suites pass (12.58 s). All 12 baseline and 12 DC replay cases pass. Reports: `reports/mini2-cfo-2026-09-24/`, `reports/cfo-2026-09-24-baseline/`, `reports/cfo-2026-09-24-dc/`.
+- Expanded manual `detector_live_check` to accept a new report path and optional `--dc-block`; bounded receive-only sweep of seven existing 2.4 GHz profile centers with three seconds/channel, actual 25 MS/s, RX2, gain 20 dB. Saves requested/actual tuning, cumulative counts, queue/processing age and separate receiver/settling metrics. It remains excluded from CTest. Existing report paths are rejected; no system network settings changed.
+- Live raw: 369,246,208 analyzed; 124,944,384 queue-dropped; 23,478,272 partial-batch discards; 401,408 stop discards. Two packet candidates, zero validated IDs. Maximum sampled queue/result age 286.1/326.5 ms.
+- Live DC: 276,807,680 analyzed; 224,870,400 queue-dropped; 16,252,928 partial-batch discards; 155,648 stop discards. Three packet candidates, zero validated IDs. Maximum sampled queue/result age 315.7/399.0 ms.
+- Both live runs tuned to all seven targets, showed zero UHD overflow/timeout/other-error events and zero analysis errors, with about 0.351 s skipped by settling. Counters/retuning exercised successfully, but exact RF loss and packet recovery are unknown. Raw/DC were sequential, not controlled identical RF inputs. No universal performance or live Mini 2 ID claim is made.
+- Artifacts: `reports/live-mini2-2026-09-24/{raw.json,dc.json,raw.log,dc.log,session.json,report.md}`. Radio disconnected after each run; no ongoing capture. Recorder UI/logic not edited. No firmware or board wiring changed.
+- DD04 software acceptance is now met on the defined fixtures; experimental offline channelizer remains separate from automatic live channel selection. S04 live smoke evidence added; exact coverage/error-injection validation remains limited. H01/H02/H04 remain open because firmware/setup metadata and independent labeled raw-IQ sessions were not collected.
+- Next priority S05: profile and reduce detector queue loss before broader live claims. Keep DC optional/default off. Then collect labeled fixed-channel Mini 2 positives and drone-free negatives, repeated sessions and a held-out benchmark. Live scans saved health metrics, not that corpus.
+
+- Follow-up dataset check with the corrected decoder: all 84 channelized pilot windows completed as exploratory observations, three packet candidates and zero validated IDs; `reports/cfo-2026-09-24-pilot/`. No new dataset identity claims.
+
+
+### 2026-09-24 — User's live validated Mini 2 screenshot; 1 GbE clarification and revised plan
+
+- User supplied screenshot `codex-clipboard-f35b6b5a-bcf5-4bc8-80a4-3a6766661628.png`: scan/hold mode, four validated Mini 2 DroneID packets in one identity row at 2444.5 MHz. Coordinates unavailable. This is stronger live evidence than a waveform candidate; raw IQ/firmware/ground-truth packet totals still not archived. Earlier short test runs with zero IDs remain valid historical results, not a contradiction.
+- Screenshot also shows 25 MS/s, current tuning 2399.5 MHz, 256 queued blocks, 156.74M queue-dropped samples, 59.8 ms last-batch processing, 189.1 ms oldest queued block and zero reported RX overflow/timeout/other events. Last batch time is about three times the nominal 20 ms input duration; it is not an average throughput measurement.
+- Source inspection confirms UHD `stream_args("fc32", "sc16")`: network uses 16-bit I plus 16-bit Q, 4 bytes/complex sample; host/IPC uses complex float32, 8 bytes/sample. At 25 MS/s this is 100 MB/s or 800 Mb/s of network IQ payload, plus packet overhead, and 200 MB/s host sample data before copies. 20 MS/s corresponds to 80 MB/s or 640 Mb/s network IQ payload.
+- Ettus documents X300/X310 1 Gigabit host streaming at up to 25 MS/s (16-bit): https://kb.ettus.com/X300/X310 . Thus 25 MS/s is at the documented upper rate and provides less headroom, but is not automatically beyond 1 GbE. A dedicated interface is recommended: https://files.ettus.com/manual/page_usrp_x3x0.html . Actual setup performance still needs measurement.
+- `Queue drops` are counted inside the host detector when its queue is full or the submit lock cannot be acquired. They are not an Ethernet loss counter. Screenshot and prior live results point to a demonstrated host processing bottleneck; zero UHD error events alone do not certify a perfect network. A 10 GbE upgrade alone would not fix this backlog.
+- Current tuned frequency versus historical identity-row frequency can legitimately differ after a hold expires. Existing three-second hold resumes scanning if no qualifying new ID extends it. Screenshot alone cannot establish whether that explains this exact transition; queue-delayed results and stale aggregate observations require an explicit hold audit.
+- Revised order: N01 network-only versus decoder baseline (without interrupting an active GUI session), N02 validate actual 20 MS/s lower-load preset against 25 MS/s, N03 profile/optimize processing and copies while preserving bounded queues and packet regressions, N04 show current/last-detected channels and hold countdown with fresh acquisition evidence, then N05 labeled positives/negatives and independent sessions. Only after reliability is measured should broader protocol modules/Remote ID and classification work take priority.
+- Do not simply enlarge the queue (adds latency) or silently lower rate without validating decode bandwidth. Any eventual 1 GbE preset must show actual/coerced rate and decoder eligibility. Keep DC correction optional/default off while profiling.
+- This update changes planning documents only. No live radio operation, sysctl/NIC changes, or Recorder/application source changes performed.
+
+### 2026-09-24 — N01–N05 implementation in progress
+
+- User authorized the revised throughput/scan-hold plan and confirmed closing the GUI so the X310 could be tested exclusively. Mini 2/controller remain user-reported linked for positive runs.
+- N01: confirmed 1 Gb/s NIC and MTU 1500. Ten-second UHD-only receive tests at 20 and 25 MS/s both completed with zero reported dropped samples/overruns/RX sequence errors and no NIC error/drop increments. First 25 MS/s attempt failed during RFNoC initialization, before streaming; preserved failure and successful retry. No sysctl/MTU/network settings changed.
+- Profile of identical 84 dataset windows found unnecessary full-buffer phase/median work on wideband signals. Restricted that work to its existing narrowband FSK branch. Analysis time fell from 4.943 to 3.285 s (~34%); exact event contents and counts remained unchanged on all 84 windows.
+- Derived 20 MS/s known-capture check preserves eight Mini 2 and one Air 2 packets. This verifies decoder rate compatibility, not every radio/front-end condition.
+- Initial fixed-channel optimized runs at 2444.5 MHz, 20 dB, ten seconds: 20 MS/s analyzed 179.831M and queue-dropped 13.525M, zero IDs; 25 MS/s analyzed 229.065M and queue-dropped 7.528M, two validated packets. Sequential RF conditions differ; lower rate did not automatically perform better. Profile defaults remain 25 MS/s; added an explicit lower-data-rate 20 MS/s button.
+- Packet profiling found exhaustive timing search took 0.685 of 1.104 s analysis on the two known fixtures. Added a coarse/refined search over the same timing grid, retaining the exhaustive method as an integrity-checked fallback. Adjacent carrier correction and CRC requirements remain intact. Known-packet, ±15 kHz, 20/25 MS/s and forced-fallback tests pass.
+- N04: observations now retain receiver epoch and host acquisition time. Hold decisions require newly acquired, unexpired, confirmed evidence from the current tune and epoch; historical aggregate rows cannot extend holds. Hold deadline is based on acquisition time, not delayed processing arrival. GUI shows dwell/hold countdown, detected MHz and last-seen age. Controller tests reject stale/wrong-epoch/wrong-channel/nonconfirmed/future/expired evidence.
+- Added an optional bounded two-second evidence buffer to the manual fixed-channel detector test, with epoch/timestamp checks and disk writes after RX stops. It is separate from Recorder. Field evidence collection and final measurements are in progress.
+- Current validation: build succeeds, seven CTest suites pass (11.95 s). Reports/profile data are under `reports/throughput-2026-09-24/`.
+
+
+### 2026-09-24 — N01–N04 verified; first N05 field corpus seed complete
+
+- Network-only tests support the previous distinction: 1 GbE streamed both 20 and 25 MS/s without observed sample/sequence loss in ten-second tests. The detector still loses samples on its own queue. Initialization failures before streaming were retained and retried, not counted as rate failures.
+- Final packet profile: known-fixture analysis 1.104→0.830 s (~25% reduction); timing-search time 0.685→0.342 s. The preceding wideband-path optimization gave 4.943→3.285 s (~34%) on 84 identical dataset windows with exact result equivalence. These are local measurements, not guarantees on rejected packets or all traffic. Host copies/IPC remain unisolated in Python profiling.
+- Final known-packet validation: seven CTest suites pass (13.62 s), all 12 raw/DC benchmark cases pass; derived 20 MS/s fixtures retain eight Mini 2 and one Air 2 packet. Worker tests verify receiver epoch/acquisition metadata reaches confirmed observations. Scan/hold helper tests enforce freshness; GUI layout was built but not interactively inspected.
+- Added the explicit `Use 20 MS/s (lower data rate)` button for DJI profiles. Existing 25 MS/s default is retained because live results vary and 20 MS/s did not consistently improve packet recovery. Actual receiver rate remains visible; DC stays default off.
+- First fixed-channel runs after wideband optimization: 20 MS/s 13.525M queue drops and zero valid packets; 25 MS/s 7.528M queue drops and two valid packets. Later final-timing-search runs: 20 MS/s 2.531M queue drops / zero IDs; 25 MS/s with evidence copying 14.590M / zero IDs. Target-off 25 MS/s capture run 43.811M / zero IDs. All completed runs had zero reported receiver and analysis errors. RF activity and capture overhead differ, so these are not controlled A/B speedup or accuracy claims.
+- User then confirmed both target drone and controller OFF while X310 remained connected. Saved initial linked-state and target-off captures, two seconds each at 25 MS/s / 2444.5 MHz / RX2 / 20 dB. Both contain 50M complex samples, 400 MB each, with no capture continuity reset. The manual detector test buffers bounded IQ in memory and writes only after RX stops; Recorder was not changed.
+- Added `reports/throughput-2026-09-24/field-captures.json` with SHA256, actual RF/rate, timestamps and user-state labels. Both are one development session; independent session/held-out claims are forbidden. Firmware, antenna model, range and exact transmitted packet counts remain unknown.
+- Field replay: linked-state sample zero validated IDs, zero packet candidates; target-off sample zero IDs, one rejected packet candidate. Both contain non-identity waveform observations. Target-off is not proof of absence of every possible drone or ambient emitter. Results remain exploratory, not scored accuracy.
+- Final artifacts: `reports/throughput-2026-09-24/report.md`, `network.json`, profiles/before-after data, live reports/logs, `field-captures.json`, `field-replay/`, final baseline/DC reports and source hashes. No ongoing hardware test; USRP disconnected after each run. No network/sysctl/firmware change, no Recorder UI/recording changes.
+- N01–N04 implemented and tested in their stated bounded scope. N05 has a first corpus seed but remains open for repeated independent sessions, held-out data and IQ containing a validated live ID. Next optimization targets are rejected-candidate work and host transfer/copies; retain exhaustive fallback and strict packet regressions.
+
+### 2026-09-24 — Rich DJI telemetry implementation
+
+- User authorized expanded telemetry after reviewing the plan. Changes limited to detector parser, event/model path, detector GUI, tests and documentation; no radio operation or Recorder changes.
+- Added full decoded JSON/raw 91-byte payload, raw height/altitude, bounded UUID bytes and length status. Optional non-UTF8 UUID no longer rejects an otherwise valid packet.
+- Added grouped per-drone telemetry inspector, packet acquisition age (10-second UI stale threshold), conservative position statuses, raw velocity/time/angle, tentative reference state labels including private-disabled polarity and uninterpreted bits. No conversion to m/s or UTC and no AGL/AMSL claim.
+- JSON copy and unique-file export added under reports/telemetry. Latest-packet replacement prevents old valid values being silently carried into a newer packet with unavailable fields. Verification in progress.
+
+### 2026-09-24 — Rich telemetry verification complete
+
+- Build succeeded; all seven CTest suites passed (12.56 seconds), including existing Mini 2/Air 2 decode and scan/hold regressions. New tests cover missing fields, zero pairs versus valid equator/meridian coordinates, out-of-range/nonfinite coordinates, tentative unset flags, unknown state bits, maximum unsigned GPS timestamp, zero/short/oversized/non-UTF8 UUIDs, raw payload preservation and CRC acceptance. Air 2 subprocess test verifies sequence and raw JSON reach the C++ observation.
+- Hardware-free ImGui smoke test created and rendered an expanded inspector with populated/missing fields and a 15-second-old packet without assertions. This checks UI construction, not a visual inspection or interactive clipboard/file-save test.
+- User-facing instructions added to DETECTOR.md. Units/datum/epoch/bit mappings remain explicitly pending T05. No live telemetry claim made and no USRP connection initiated. Recorder tab and recording source were not edited.

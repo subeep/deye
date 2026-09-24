@@ -138,3 +138,44 @@ Author metadata found after the earlier audit corroborates dataset-family settin
 Exact local V2 per-file settings, archive provenance, license and independent
 session grouping remain unverified. Historical reports retain their original
 provisional metadata rather than being retroactively rewritten.
+
+
+### 2026-09-24 correction to the channelization limitation
+
+The previously documented four-of-eight Mini 2 regression is resolved. A bounded
+adjacent-carrier retry corrects the cyclic-prefix carrier estimate's 15 kHz
+ambiguity while retaining packet integrity requirements. The strict 25 MS/s
+channelized fixture now recovers all eight original sequences; Air 2 remains valid.
+Earlier failures are preserved as historical evidence. Automatic live channelizer
+selection is still not implemented. See `reports/mini2-cfo-2026-09-24/` and
+`reports/live-mini2-2026-09-24/report.md` for the fix and hardware results.
+
+## Live throughput and labeled evidence (2026-09-24)
+
+Close/disconnect other USRP applications first. The manual tool is receive-only;
+choose a **new** output path for each run:
+
+```sh
+build/detector_live_check reports/new-live20.json --rate 20000000 --fixed
+build/detector_live_check reports/new-live25.json --rate 25000000 --fixed --capture
+```
+
+Fixed mode observes 2444.5 MHz for ten seconds at gain 20 dB, RX2. Without
+`--fixed`, it scans seven existing 2.4 GHz centers for three seconds each.
+`--dc-block` enables the optional correction. `--capture` requires fixed mode
+and saves a bounded two-second IQ buffer to REPORT.json.cf32 after reception
+stops (320 MB at 20 MS/s or 400 MB at 25 MS/s). Epoch/time/rate/frequency gaps
+restart an incomplete buffer; capture completion and reset counts are reported.
+The tool refuses existing report/capture paths. JSON values from the C++ writer
+are strings; consumers must parse numeric/boolean fields explicitly.
+
+A successful health check means tuning/analysis completed, not that a drone was
+identified or samples were loss-free. Record operator-confirmed states and setup
+metadata separately. Keep linked and target-off recordings from one session in
+the same development split. Do not assume target-off means no nearby drones.
+
+The initial two-capture manifest and replay are under
+`reports/throughput-2026-09-24/field-captures.json` and `field-replay/`.
+Performance results, network-only logs and known-packet regressions are summarized
+in `reports/throughput-2026-09-24/report.md`. Recorder is not used by this capture
+option and its UI/recording logic is unchanged.

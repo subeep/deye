@@ -89,9 +89,11 @@ Input is little-endian complex float32 IQ (interleaved I/Q floats). Output is JS
 with validated packets, waveform observations, candidate/rejection counts, and
 processing time. Offline inputs are read in bounded chunks.
 
-`build/detector_live_check` is an optional, manual hardware smoke test. It connects
-to the configured X310 and receives at 915, 916 and 2444.5 MHz. Do not run a second
-receiver while the application owns the USRP. It is not part of CTest.
+`build/detector_live_check NEW_REPORT.json` is an optional, manual receive-only
+hardware check using seven 2.4 GHz profile centers. `--fixed` selects 2444.5 MHz;
+`--rate 20000000` selects 20 MS/s (default 25 MS/s). Do not run a second receiver
+while the application owns the USRP. It is not part of CTest. See
+DETECTOR_BENCHMARK.md for bounded IQ capture and report interpretation.
 
 The GUI reports analyzed samples, detector queue drops and batch processing time.
 The reference-derived Python demodulator may run slower than real time, especially
@@ -141,3 +143,45 @@ These copyleft dependencies and adaptations carry distribution/source obligation
 this implementation should not be represented as a permissively licensed bundle.
 The original publications are the basis of the reverse-engineered protocol support,
 not a guarantee that future DJI/ELRS firmware uses the same on-air formats.
+
+
+## 2026-09-24 detector updates
+
+- DJI profiles offer an explicit 20 MS/s lower-data-rate button; profile defaults
+  remain 25 MS/s. Both rates pass known-capture tests; neither guarantees live
+  throughput under arbitrary traffic.
+- Scan/hold accepts fresh confirmed observations from the current tuning epoch.
+  The countdown is based on acquisition time. Detected MHz and last-seen age are
+  distinct from current receiver tuning; old identity rows remain historical.
+- Wideband classification skips irrelevant phase clustering. Packet timing uses
+  a coarse/refined search with exhaustive fallback and unchanged CRC checks.
+- Manual hardware check now requires a new report filename. See
+  DETECTOR_BENCHMARK.md for fixed 20/25 MS/s tests and bounded evidence capture.
+- Current measured results and limitations supersede older smoke-run numbers:
+  reports/throughput-2026-09-24/report.md. Queue loss remains a known limitation.
+
+## DJI packet telemetry
+
+After receiving a CRC-validated DJI packet, expand `Telemetry: <serial> (<model>)`
+below the identity table. The inspector shows aircraft/app/home coordinates,
+separate height and altitude, raw north/east/up velocity, raw angle, GPS time,
+sequence, UUID, and state bits. Every displayed field belongs to the latest
+accepted packet for that serial; unavailable new values replace old values.
+Packet acquisition age applies to all fields. `STALE` means no accepted packet
+for over ten seconds, not a decoded flight state or proof the aircraft left.
+
+Velocity remains raw, GPS time remains an integer, and the existing raw/3.281
+height/altitude conversion is explicitly provisional. No terrain AGL, altitude
+datum, m/s, derived ground speed or UTC interpretation is asserted. State labels
+are tentative annotations from the reference parser, including bit 9 **private
+mode disabled**; uninterpreted bits remain visible. Positions show range/zero
+checks and tentative unset flags, not authenticated or independently verified
+fixes. App/controller coordinates need not be current operator GPS.
+
+`Copy packet JSON` copies the latest decoded packet. `Save packet JSON` creates
+a unique file under `reports/telemetry/` relative to the launch directory and
+shows its absolute path. Export includes all parser fields and the original
+91-byte payload as hex, including CRC16, raw vertical values, and UUID bytes.
+It is a packet export, not an IQ recording or a track history. UUID length is
+bounded to 20 bytes; malformed text is displayed with replacement characters
+while its original bytes remain available. CRC24A/CRC16 acceptance is unchanged.

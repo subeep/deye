@@ -22,7 +22,6 @@ from qpsk import Decoder
 from goldgen import gold
 from droneid_packet import DroneIDPacket
 from packetizer import coarse_activity
-from telemetry import packet_telemetry
 
 HEADER = struct.Struct("<4sIdddQ")
 MAX_SAMPLES = 2_000_000
@@ -151,13 +150,11 @@ def classify_waveform(iq, rate, frequency):
     if np.count_nonzero(active) >= 3:
         bins = np.where(active)[0]
         bandwidth = float((bins[-1] - bins[0] + 1) * rate / len(psd))
-        # Phase clustering is only relevant to the narrowband FSK path.
-        # Avoid full-buffer angle/median work for wideband OFDM/unknown signals.
-        if bandwidth < 2e6:
-            phase = np.angle(iq[1:] * iq[:-1].conj()) * rate / (2*np.pi)
-            strong = np.abs(iq[1:]) > np.median(np.abs(iq)) * .5
-            phase = phase[strong]
-        if bandwidth < 2e6 and len(phase) > 100:
+        # Two populated clusters in phase increments are consistent with 2-FSK.
+        phase = np.angle(iq[1:] * iq[:-1].conj()) * rate / (2*np.pi)
+        strong = np.abs(iq[1:]) > np.median(np.abs(iq)) * .5
+        phase = phase[strong]
+        if len(phase) > 100 and bandwidth < 2e6:
             centers = np.percentile(phase, [25, 75])
             for _ in range(8):
                 mask = abs(phase-centers[0]) < abs(phase-centers[1])
@@ -200,24 +197,22 @@ class Analyzer:
         # CP synchronization estimates carrier offset modulo the 15 kHz spacing.
         # Welch centering can land on a neighboring carrier, especially after
         # channelization. Retry only the adjacent bins, retaining both CRC checks.
-        # Fast timing search first; retain the original exhaustive path on failure.
-        for fast_timing in (True, False):
-            for correction in (0, 15000, -15000):
-                try:
-                    shifted = frame.copy() if not correction else frame*np.exp(
-                        2j*np.pi*correction*np.arange(len(frame))/15.36e6)
-                    packet = Packet(shifted, enable_zc_detection=False, legacy=legacy, fast_timing=fast_timing)
-                    decoder = Decoder(packet.get_symbol_data(skip_zc=True))
-                    for rotation in range(4):
-                        decoder.raw_data_to_symbol_bits(rotation)
-                        decoded = self.turbo.decode(decoder.sym_bits)
-                        if decoded is None:
-                            continue
-                        parsed = DroneIDPacket(decoded)
-                        if parsed.check_crc() and parsed.droneid["pkt_len"] == 88 and parsed.droneid["version"] in (1, 2):
-                            return dict(parsed.droneid), correction
-                except (ValueError, IndexError, TypeError, UnicodeError, struct.error, FloatingPointError):
-                    continue
+        for correction in (0, 15000, -15000):
+            try:
+                shifted = frame.copy() if not correction else frame*np.exp(
+                    2j*np.pi*correction*np.arange(len(frame))/15.36e6)
+                packet = Packet(shifted, enable_zc_detection=False, legacy=legacy)
+                decoder = Decoder(packet.get_symbol_data(skip_zc=True))
+                for rotation in range(4):
+                    decoder.raw_data_to_symbol_bits(rotation)
+                    decoded = self.turbo.decode(decoder.sym_bits)
+                    if decoded is None:
+                        continue
+                    parsed = DroneIDPacket(decoded)
+                    if parsed.check_crc() and parsed.droneid["pkt_len"] == 88 and parsed.droneid["version"] in (1, 2):
+                        return dict(parsed.droneid), correction
+            except (ValueError, IndexError, TypeError, UnicodeError, struct.error, FloatingPointError):
+                continue
         return None, None
 
     def analyze(self, samples, rate, frequency, timestamp=0., epoch=0):
@@ -268,8 +263,7 @@ class Analyzer:
                                 model=payload["device_type"] or "Unknown DJI model",
                                 sequence=payload["sequence_number"], latitude=payload["latitude"],
                                 longitude=payload["longitude"], altitude=payload["altitude"],
-                                legacy=legacy, carrier_correction_hz=carrier_correction,
-                                telemetry=packet_telemetry(payload)))
+                                legacy=legacy, carrier_correction_hz=carrier_correction))
                         except (ValueError, IndexError, TypeError, UnicodeError, struct.error, FloatingPointError):
                             rejected += 1
         if not events:

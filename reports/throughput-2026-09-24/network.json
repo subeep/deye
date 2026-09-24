@@ -1,0 +1,148 @@
+{
+  "speed_mbps": 1000,
+  "mtu": 1500,
+  "runs": [
+    {
+      "requested_rate": 20000000,
+      "exit_code": 0,
+      "wall_s": 14.341989278793335,
+      "nic_before": {
+        "rx_bytes": 77098028102,
+        "rx_packets": 50978727,
+        "rx_errors": 0,
+        "rx_dropped": 0,
+        "rx_missed_errors": 0
+      },
+      "nic_after": {
+        "rx_bytes": 77934332706,
+        "rx_packets": 51535104,
+        "rx_errors": 0,
+        "rx_dropped": 0,
+        "rx_missed_errors": 0
+      },
+      "nic_delta": {
+        "rx_bytes": 836304604,
+        "rx_packets": 556377,
+        "rx_errors": 0,
+        "rx_dropped": 0,
+        "rx_missed_errors": 0
+      },
+      "command": [
+        "/usr/lib/uhd/examples/benchmark_rate",
+        "--args",
+        "addr=192.168.10.2",
+        "--duration",
+        "10",
+        "--rx_rate",
+        "20000000",
+        "--rx_otw",
+        "sc16",
+        "--rx_cpu",
+        "fc32",
+        "--rx_channels",
+        "0",
+        "--overrun-threshold",
+        "0",
+        "--drop-threshold",
+        "0",
+        "--seq-threshold",
+        "0"
+      ]
+    },
+    {
+      "requested_rate": 25000000,
+      "exit_code": 255,
+      "wall_s": 2.2716541290283203,
+      "nic_before": {
+        "rx_bytes": 77934332706,
+        "rx_packets": 51535104,
+        "rx_errors": 0,
+        "rx_dropped": 0,
+        "rx_missed_errors": 0
+      },
+      "nic_after": {
+        "rx_bytes": 77934454252,
+        "rx_packets": 51535796,
+        "rx_errors": 0,
+        "rx_dropped": 0,
+        "rx_missed_errors": 0
+      },
+      "nic_delta": {
+        "rx_bytes": 121546,
+        "rx_packets": 692,
+        "rx_errors": 0,
+        "rx_dropped": 0,
+        "rx_missed_errors": 0
+      },
+      "command": [
+        "/usr/lib/uhd/examples/benchmark_rate",
+        "--args",
+        "addr=192.168.10.2",
+        "--duration",
+        "10",
+        "--rx_rate",
+        "25000000",
+        "--rx_otw",
+        "sc16",
+        "--rx_cpu",
+        "fc32",
+        "--rx_channels",
+        "0",
+        "--overrun-threshold",
+        "0",
+        "--drop-threshold",
+        "0",
+        "--seq-threshold",
+        "0"
+      ]
+    },
+    {
+      "requested_rate": 25000000,
+      "retry_after_initialization_failure": true,
+      "exit_code": 0,
+      "wall_s": 14.348899841308594,
+      "nic_before": {
+        "rx_bytes": 77934454252,
+        "rx_packets": 51535796,
+        "rx_errors": 0,
+        "rx_dropped": 0,
+        "rx_missed_errors": 0
+      },
+      "nic_after": {
+        "rx_bytes": 78979724788,
+        "rx_packets": 52230275,
+        "rx_errors": 0,
+        "rx_dropped": 0,
+        "rx_missed_errors": 0
+      },
+      "nic_delta": {
+        "rx_bytes": 1045270536,
+        "rx_packets": 694479,
+        "rx_errors": 0,
+        "rx_dropped": 0,
+        "rx_missed_errors": 0
+      },
+      "command": [
+        "/usr/lib/uhd/examples/benchmark_rate",
+        "--args",
+        "addr=192.168.10.2",
+        "--duration",
+        "10",
+        "--rx_rate",
+        "25000000",
+        "--rx_otw",
+        "sc16",
+        "--rx_cpu",
+        "fc32",
+        "--rx_channels",
+        "0",
+        "--overrun-threshold",
+        "0",
+        "--drop-threshold",
+        "0",
+        "--seq-threshold",
+        "0"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "user_report": "X310 connected; Mini 2 available; controller on and linked",
+  "firmware": null,
+  "aircraft_flight_state": "Not independently observed",
+  "antenna_model": null,
+  "distance_m": null,
+  "scope": "Receive-only health smoke tests; seven 2.4 GHz channels, three seconds/channel, 25 MS/s, 20 dB, RX2",
+  "source_sha256": {
+    "src/detector/python/backend.py": "69b88ef785e3657ef21cbd9e8b5807d280ba7facbb3500fa75b67040943241c9",
+    "src/detector/python/preprocessing.py": "b416b2c5621397add699a1453ac0635d24c34ab674cdd9e7ddee0287ff0b92e7",
+    "src/detector/detector.cpp": "66819f7a09d4c513a8243f3ba320bc69706813a4d8958db1c991b7f99ded75b8",
+    "src/usrp_worker.cpp": "caeec3d9fce4375b93cab2877b0c8689f5236d0f7812a0a83269816f1ac229d7",
+    "tests/detector_live_check.cpp": "10aa83cf1a0192607462bb596f67f04eb6fa283dd48c099f92ed207dc6f76c2d"
+  }
+}

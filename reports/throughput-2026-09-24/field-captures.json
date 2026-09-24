@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "captures": [
+    {
+      "id": "linked-positive25",
+      "path": "/home/sudeep/Pictures/Drone_recorder./reports/throughput-2026-09-24/linked-positive25.json.cf32",
+      "sha256": "7cccba289ae9aa8f7c42fe250e8cb4c43ef281ef8bd8d3b3984d40f45a540f55",
+      "format": "cf32_le",
+      "kind": "real",
+      "split": "development",
+      "session": "x310-2026-09-24-same-location",
+      "evaluation": "exploratory",
+      "expected": null,
+      "sample_rate_hz": 25000000.0,
+      "center_frequency_hz": 2444500000.0,
+      "provenance": "User-authorized X310 receive-only capture, N01-N05 work, 2026-09-24",
+      "operating_state": "Mini 2/controller linked, user-confirmed",
+      "firmware": null,
+      "antenna_model": null,
+      "gain_db": 20.0,
+      "rx_first_sample_time_s": 0.202364265,
+      "capture_resets": 0,
+      "ground_truth": "Operating state only; transmitted packet counts unknown; not an independent held-out session"
+    },
+    {
+      "id": "target-off25",
+      "path": "/home/sudeep/Pictures/Drone_recorder./reports/throughput-2026-09-24/target-off25.json.cf32",
+      "sha256": "7dffa2fc3057abf1c1288f32c4ea56b342c5db61310ad1fc0cc4522d04da11d8",
+      "format": "cf32_le",
+      "kind": "real",
+      "split": "development",
+      "session": "x310-2026-09-24-same-location",
+      "evaluation": "exploratory",
+      "expected": null,
+      "sample_rate_hz": 25000000.0,
+      "center_frequency_hz": 2444500000.0,
+      "provenance": "User-authorized X310 receive-only capture, N01-N05 work, 2026-09-24",
+      "operating_state": "Target Mini 2 and controller switched off, user-confirmed; other emitters unknown",
+      "firmware": null,
+      "antenna_model": null,
+      "gain_db": 20.0,
+      "rx_first_sample_time_s": 0.181537255,
+      "capture_resets": 0,
+      "ground_truth": "Operating state only; transmitted packet counts unknown; not an independent held-out session"
+    }
+  ]
+}

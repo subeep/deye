@@ -13,6 +13,22 @@ void UsrpWorker::set_gain(double value) { current_gain_=value; }
 
 static void check(bool condition) { if (!condition) throw std::runtime_error("Controller ownership check failed"); }
 int main() {
+    // Aggregate historical observations must never extend a new hold.
+    using Clock=std::chrono::steady_clock;
+    auto now=Clock::now(); auto tune=now-std::chrono::seconds(1);
+    drone::Observation o; o.confirmed=true; o.frequency=2444.5e6; o.receiver_epoch=3;
+    o.acquired_at=now-std::chrono::milliseconds(200);
+    auto eligible=[&](const drone::Observation& item,Clock::time_point consumed=Clock::time_point{}) {
+        return drone::fresh_hold_evidence({item},2444.5e6,3,tune,consumed,now,std::chrono::milliseconds(3000));
+    };
+    check(eligible(o)==o.acquired_at);
+    check(eligible(o,o.acquired_at)==o.acquired_at); // consumed event cannot extend from now
+    auto bad=o;bad.receiver_epoch=2;check(eligible(bad)==Clock::time_point{});
+    bad=o;bad.frequency=2434.5e6;check(eligible(bad)==Clock::time_point{});
+    bad=o;bad.acquired_at=tune-std::chrono::milliseconds(1);check(eligible(bad)==Clock::time_point{});
+    bad=o;bad.confirmed=false;check(eligible(bad)==Clock::time_point{});
+    bad=o;bad.acquired_at=now+std::chrono::seconds(1);check(eligible(bad)==Clock::time_point{});
+    check(drone::fresh_hold_evidence({o},2444.5e6,3,tune,{},now,std::chrono::milliseconds(100))==Clock::time_point{});
     AppState state;
     UsrpWorker radio;
     drone::Controller controller;

@@ -65,7 +65,7 @@ void Controller::tick(AppState& s, UsrpWorker& radio, bool recording) {
                 coverage_tick_=now; previous_frequency_=radio.get_freq();
                 s.dd_scan_elapsed_s=0; s.dd_channel_away_s=0;
                 detector_.start(s.dd_dc_block); radio.detector_active=true; active_=true;
-                last_decoded_=0; tuned_=false;
+                tune_started_=now; consumed_evidence_={}; tuned_=false; s.dd_hold_active=false;
                 tune_deadline_=now+std::chrono::seconds(3);
                 s.dd_status_msg="Starting receiver...";
             }
@@ -92,6 +92,7 @@ void Controller::tick(AppState& s, UsrpWorker& radio, bool recording) {
     if (s.dd_stop_requested) {
         s.dd_stop_requested=false;
         shutdown(radio);
+        s.dd_hold_active=false; s.dd_dwell_remaining_s=0;
         s.dd_snapshot=detector_.snapshot();
         if (s.dd_status_msg=="Stop requested") s.dd_status_msg="Stopped; detector frequency and RX settings retained.";
     }
@@ -110,19 +111,24 @@ void Controller::tick(AppState& s, UsrpWorker& radio, bool recording) {
             s.dd_status_msg="Tune failed: requested frequency was not applied.";
             s.dd_stop_requested=true;
         }
-        if (s.dd_snapshot.decoded>last_decoded_) {
-            last_decoded_=s.dd_snapshot.decoded;
-            // Queued results from a previous channel must not hold the new channel.
-            bool current=false;
-            for (const auto& o:s.dd_snapshot.observations)
-                if (o.confirmed && std::abs(o.frequency-s.dd_target_hz)<5000) current=true;
-            if (s.dd_mode==2 && current) deadline_=now+std::chrono::milliseconds(s.dd_hold_ms);
+        if (s.dd_mode==2 && tuned_) {
+            auto evidence=fresh_hold_evidence(s.dd_snapshot.observations,s.dd_target_hz,
+                radio.get_detector_epoch(),tune_started_,consumed_evidence_,now,
+                std::chrono::milliseconds(s.dd_hold_ms));
+            if (evidence>consumed_evidence_) {
+                consumed_evidence_=evidence;
+                deadline_=evidence+std::chrono::milliseconds(s.dd_hold_ms);
+                s.dd_hold_active=true;
+            }
         }
         if (tuned_ && s.dd_snapshot.ready && s.dd_mode!=0 && !s.dd_use_custom_freq && now>=deadline_) {
             position_=(position_+1)%sequence_.size();
-            s.dd_target_hz=sequence_[position_]; radio.set_freq(s.dd_target_hz);
+            s.dd_target_hz=sequence_[position_];
+            tune_started_=now; s.dd_hold_active=false;
+            radio.set_freq(s.dd_target_hz);
             tuned_=false; tune_deadline_=now+std::chrono::seconds(3);
         }
+        s.dd_dwell_remaining_s=tuned_ ? std::max(0.,std::chrono::duration<double>(deadline_-now).count()) : 0.;
         s.dd_scan_position=position_;
         s.dd_channel_away_s=away_seconds_.at(position_);
     }

@@ -1,0 +1,33 @@
+         140080 function calls (140032 primitive calls) in 5.972 seconds
+
+   Ordered by: cumulative time
+   List reduced from 356 to 25 due to restriction <25>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.018    0.018    5.972    5.972 <stdin>:6(<listcomp>)
+       84    0.005    0.000    5.942    0.071 /home/sudeep/Pictures/Drone_recorder./src/detector/python/benchmark.py:127(run_capture)
+       84    0.159    0.002    4.942    0.059 /home/sudeep/Pictures/Drone_recorder./src/detector/python/backend.py:218(analyze)
+       84    0.900    0.011    3.179    0.038 /home/sudeep/Pictures/Drone_recorder./src/detector/python/backend.py:127(classify_waveform)
+       84    0.082    0.001    1.570    0.019 /home/sudeep/Pictures/Drone_recorder./src/detector/python/reference/packetizer.py:9(coarse_activity)
+      168    0.295    0.002    1.425    0.008 /home/sudeep/.local/lib/python3.10/site-packages/scipy/signal/_spectral_py.py:1863(_spectral_helper)
+       84    0.001    0.000    1.368    0.016 /home/sudeep/.local/lib/python3.10/site-packages/scipy/signal/_spectral_py.py:1248(stft)
+      168    0.361    0.002    0.917    0.005 /home/sudeep/.local/lib/python3.10/site-packages/scipy/signal/_spectral_py.py:2158(_fft_helper)
+       60    0.808    0.013    0.808    0.013 /home/sudeep/.local/lib/python3.10/site-packages/numpy/lib/function_base.py:1606(angle)
+       84    0.003    0.000    0.699    0.008 /home/sudeep/Pictures/Drone_recorder./src/detector/python/benchmark.py:27(window_digest)
+      159    0.114    0.001    0.678    0.004 /home/sudeep/Pictures/Drone_recorder./src/detector/python/backend.py:102(cp_score)
+      332    0.001    0.000    0.617    0.002 /home/sudeep/.local/lib/python3.10/site-packages/numpy/lib/function_base.py:3763(_ureduce)
+      332    0.562    0.002    0.562    0.002 {method 'partition' of 'numpy.ndarray' objects}
+      168    0.001    0.000    0.533    0.003 /home/sudeep/.local/lib/python3.10/site-packages/scipy/fft/_backend.py:18(__ua_function__)
+      168    0.000    0.000    0.532    0.003 /home/sudeep/.local/lib/python3.10/site-packages/scipy/fft/_basic_backend.py:77(fft)
+      168    0.001    0.000    0.532    0.003 /home/sudeep/.local/lib/python3.10/site-packages/scipy/fft/_basic_backend.py:27(_execute_1D)
+      168    0.001    0.000    0.529    0.003 /home/sudeep/.local/lib/python3.10/site-packages/scipy/fft/_pocketfft/basic.py:11(c2c)
+      168    0.525    0.003    0.525    0.003 {built-in method scipy.fft._pocketfft.pypocketfft.c2c}
+       73    0.000    0.000    0.489    0.007 /home/sudeep/.local/lib/python3.10/site-packages/numpy/lib/function_base.py:3845(median)
+       73    0.002    0.000    0.488    0.007 /home/sudeep/.local/lib/python3.10/site-packages/numpy/lib/function_base.py:3931(_median)
+       73    0.000    0.000    0.481    0.007 /home/sudeep/.local/lib/python3.10/site-packages/numpy/core/fromnumeric.py:662(partition)
+      840    0.414    0.000    0.414    0.000 {method 'update' of '_hashlib.HASH' objects}
+      327    0.217    0.001    0.366    0.001 /home/sudeep/.local/lib/python3.10/site-packages/scipy/signal/_peak_finding.py:729(find_peaks)
+      840    0.278    0.000    0.278    0.000 {method 'read' of '_io.BufferedReader' objects}
+      636    0.001    0.000    0.257    0.000 /home/sudeep/.local/lib/python3.10/site-packages/numpy/core/fromnumeric.py:53(_wrapfunc)
+
+

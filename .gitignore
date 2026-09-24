@@ -53,5 +53,6 @@ recordings/
 iq_*.bin
 iq_*.json
 *.fc32
+*.cf32
 !tests/data/*.fc32
 !tests/data/*.csv

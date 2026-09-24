@@ -1,0 +1,26 @@
+         1027164 function calls (1027116 primitive calls) in 0.845 seconds
+
+   Ordered by: cumulative time
+   List reduced from 422 to 18 due to restriction <18>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.000    0.000    0.845    0.845 <stdin>:5(<listcomp>)
+        2    0.000    0.000    0.844    0.422 /home/sudeep/Pictures/Drone_recorder./src/detector/python/benchmark.py:127(run_capture)
+        2    0.003    0.002    0.830    0.415 /home/sudeep/Pictures/Drone_recorder./src/detector/python/backend.py:222(analyze)
+       13    0.003    0.000    0.702    0.054 /home/sudeep/Pictures/Drone_recorder./src/detector/python/backend.py:198(decode_frame)
+       23    0.002    0.000    0.387    0.017 /home/sudeep/Pictures/Drone_recorder./src/detector/python/reference/Packet.py:13(__init__)
+       23    0.008    0.000    0.342    0.015 /home/sudeep/Pictures/Drone_recorder./src/detector/python/reference/Packet.py:232(find_zc_offset)
+       40    0.074    0.002    0.327    0.008 /home/sudeep/Pictures/Drone_recorder./src/detector/python/reference/Packet.py:246(metric)
+       78    0.064    0.001    0.254    0.003 /home/sudeep/Pictures/Drone_recorder./src/detector/python/reference/qpsk.py:69(raw_data_to_symbol_bits)
+   328146    0.168    0.000    0.178    0.000 /home/sudeep/Pictures/Drone_recorder./src/detector/python/reference/qpsk.py:46(get_symbol_bits)
+       28    0.026    0.001    0.093    0.003 /home/sudeep/.local/lib/python3.10/site-packages/scipy/signal/_spectral_py.py:1863(_spectral_helper)
+       63    0.052    0.001    0.092    0.001 /home/sudeep/.local/lib/python3.10/site-packages/numpy/lib/function_base.py:1663(unwrap)
+       26    0.001    0.000    0.091    0.003 /home/sudeep/Pictures/Drone_recorder./src/detector/python/reference/helpers.py:96(estimate_offset)
+       26    0.000    0.000    0.087    0.003 /home/sudeep/.local/lib/python3.10/site-packages/scipy/signal/_spectral_py.py:490(welch)
+       26    0.000    0.000    0.087    0.003 /home/sudeep/.local/lib/python3.10/site-packages/scipy/signal/_spectral_py.py:660(csd)
+       13    0.000    0.000    0.061    0.005 /home/sudeep/Pictures/Drone_recorder./src/detector/python/reference/SpectrumCapture.py:51(get_packet_samples)
+     1121    0.001    0.000    0.060    0.000 /home/sudeep/.local/lib/python3.10/site-packages/numpy/fft/_pocketfft.py:49(_raw_fft)
+      914    0.001    0.000    0.060    0.000 /home/sudeep/.local/lib/python3.10/site-packages/numpy/fft/_pocketfft.py:122(fft)
+     1121    0.059    0.000    0.059    0.000 {built-in method numpy.fft._pocketfft_internal.execute}
+
+

@@ -5,12 +5,74 @@
 #include "implot.h"
 #include <algorithm>
 #include <cstdio>
+#include <cstdlib>
 #include <cmath>
+#include <filesystem>
+#include <unistd.h>
 
 static void Section(const char* text) {
     ImGui::Spacing();
     ImGui::TextColored(ImVec4(.49f,.83f,.99f,1), "%s", text);
     ImGui::Separator();
+}
+static void TelemetryDetails(const drone::Observation& o) {
+    static std::string export_message;
+    ImGui::PushID(o.serial.c_str());
+    const std::string label="Telemetry: "+o.serial+" ("+o.model+")";
+    if (ImGui::TreeNodeEx("##telemetry",ImGuiTreeNodeFlags_None,"%s",label.c_str())) {
+        const double age=std::chrono::duration<double>(std::chrono::steady_clock::now()-o.acquired_at).count();
+        ImGui::Text("Latest packet received %.1f s ago%s",age,age>10 ? " - STALE (over 10 s)" : "");
+        ImGui::TextWrapped("All fields below belong to this packet. Age measures receiver acquisition time, not GPS-fix freshness. CRC checks packet integrity; telemetry validity and state-bit meanings may be unverified.");
+        if (o.telemetry.empty()) ImGui::TextUnformatted("Telemetry unavailable for this observation.");
+        else if (ImGui::BeginTable("##fields",3,ImGuiTableFlags_Borders|ImGuiTableFlags_RowBg|ImGuiTableFlags_Resizable)) {
+            ImGui::TableSetupColumn("Field"); ImGui::TableSetupColumn("Reported value");
+            ImGui::TableSetupColumn("Validity / interpretation"); ImGui::TableHeadersRow();
+            std::string group;
+            for (const auto& f:o.telemetry) {
+                if (group!=f.group) {
+                    group=f.group; ImGui::TableNextRow(); ImGui::TableSetColumnIndex(0);
+                    ImGui::TextColored(ImVec4(.49f,.83f,.99f,1),"%s",group.c_str());
+                }
+                ImGui::TableNextRow(); ImGui::TableSetColumnIndex(0); ImGui::TextWrapped("%s",f.name.c_str());
+                ImGui::TableSetColumnIndex(1); ImGui::TextWrapped("%s",f.value.c_str());
+                ImGui::TableSetColumnIndex(2); ImGui::TextWrapped("%s",f.status.c_str());
+            }
+            ImGui::EndTable();
+        }
+        ImGui::BeginDisabled(o.packet_json.empty());
+        if (ImGui::Button("Copy packet JSON")) ImGui::SetClipboardText(o.packet_json.c_str());
+        ImGui::SameLine();
+        if (ImGui::Button("Save packet JSON")) {
+            std::error_code error;
+            std::filesystem::create_directories("reports/telemetry",error);
+            std::string message;
+            if (error) message="Cannot create export directory: "+error.message();
+            else {
+                // Unique, exclusively created files never overwrite previous evidence.
+                std::string path="reports/telemetry/dji-packet-XXXXXX.json";
+                int fd=mkstemps(path.data(),5);
+                FILE* file=fd<0 ? nullptr : fdopen(fd,"w");
+                if (!file) { if (fd>=0) { close(fd); std::filesystem::remove(path,error); } message="Cannot open packet export file."; }
+                else {
+                    const bool written=fwrite(o.packet_json.data(),1,o.packet_json.size(),file)==o.packet_json.size();
+                    const bool closed=fclose(file)==0;
+                    if (written && closed) message="Saved: "+std::filesystem::absolute(path).string();
+                    else { std::filesystem::remove(path,error); message="Packet export failed."; }
+                }
+            }
+            export_message=message;
+            ImGui::OpenPopup("Export result");
+        }
+        ImGui::EndDisabled();
+        if (ImGui::BeginPopup("Export result")) {
+            ImGui::TextWrapped("%s",export_message.c_str()); ImGui::EndPopup();
+        }
+        if (ImGui::TreeNode("Decoded packet JSON / raw payload")) {
+            ImGui::TextWrapped("%s",o.packet_json.c_str()); ImGui::TreePop();
+        }
+        ImGui::TreePop();
+    }
+    ImGui::PopID();
 }
 static void Config(AppState& s, const UsrpWorker* radio) {
     bool connected=radio && radio->is_connected();
@@ -84,12 +146,17 @@ static void Config(AppState& s, const UsrpWorker* radio) {
     } else {
         ImGui::Text("Sample rate: %.2f MS/s (profile)",profile.rate/1e6);
     }
+    if (s.dd_profile<=1 && ImGui::Button("Use 20 MS/s (lower data rate)",ImVec2(-1,0))) {
+        s.dd_use_custom_rate=true; s.dd_sample_rate_msps=20.f;
+    }
     ImGui::Checkbox("DC correction (experimental)", &s.dd_dc_block);
     if (ImGui::IsItemHovered()) ImGui::SetTooltip("Streaming 1 kHz DC blocker; initializes from 4096 samples after gaps. Applied on Start.");
     ImGui::EndDisabled();
     if (connected) {
         ImGui::Text("Actual: %.4f MHz / %.3f MS/s",radio->get_freq()/1e6,radio->get_sample_rate()/1e6);
     }
+    if (s.dd_detection_running && s.dd_mode!=0 && !s.dd_use_custom_freq)
+        ImGui::Text("%s: %.1f s", s.dd_hold_active ? "Holding validated ID" : "Channel dwell remaining", s.dd_dwell_remaining_s);
     ImGui::Spacing();
     if (s.dd_detection_running) {
         if (ImGui::Button("STOP DETECTION",ImVec2(-1,36))) {
@@ -128,8 +195,9 @@ static void Results(AppState& s) {
     bool any=false;
     for (const auto& o:stats.observations) if (o.confirmed) any=true;
     if (!any) ImGui::TextWrapped("No checksum-validated DJI IDs received. Waveform candidates below do not establish a drone identity.");
-    if (any && ImGui::BeginTable("##dji",7,ImGuiTableFlags_Borders|ImGuiTableFlags_RowBg|ImGuiTableFlags_Resizable|ImGuiTableFlags_ScrollX)) {
-        for (const char* name:{"Serial / broadcast ID","Model","Protocol / link","MHz","dBFS","Packets","Coordinates"}) ImGui::TableSetupColumn(name);
+    if (any) ImGui::TextWrapped("Detected frequency and last seen describe received evidence; the receiver may now be scanning another channel.");
+    if (any && ImGui::BeginTable("##dji",8,ImGuiTableFlags_Borders|ImGuiTableFlags_RowBg|ImGuiTableFlags_Resizable|ImGuiTableFlags_ScrollX)) {
+        for (const char* name:{"Serial / broadcast ID","Model","Protocol / link","Detected MHz","dBFS","Packets","Coordinates","Last seen"}) ImGui::TableSetupColumn(name);
         ImGui::TableHeadersRow();
         for (const auto& o:stats.observations) {
             if (!o.confirmed) continue;
@@ -142,11 +210,14 @@ static void Results(AppState& s) {
             ImGui::TableSetColumnIndex(4); ImGui::Text("%.1f",o.power);
             ImGui::TableSetColumnIndex(5); ImGui::Text("%llu",(unsigned long long)o.count);
             ImGui::TableSetColumnIndex(6);
-            if (o.latitude==0 && o.longitude==0) ImGui::TextUnformatted("Unavailable");
-            else ImGui::Text("%.6f, %.6f",o.latitude,o.longitude);
+            if (o.position_status!="Reported; validity unverified") ImGui::TextWrapped("%s",o.position_status.c_str());
+            else ImGui::Text("%.6f, %.6f (reported)",o.latitude,o.longitude);
+            ImGui::TableSetColumnIndex(7);
+            ImGui::Text("%.1f s ago",std::chrono::duration<double>(std::chrono::steady_clock::now()-o.acquired_at).count());
         }
         ImGui::EndTable();
     }
+    for (const auto& o:stats.observations) if (o.confirmed) TelemetryDetails(o);
     Section("LINK OBSERVATIONS / PROTOCOL CANDIDATES");
     ImGui::TextWrapped("These rows are signal observations, not separate drones. A control link and video link cannot be assigned to the same aircraft without identifying packets.");
     ImGui::TextDisabled("Drag the divider below the list to resize; double-click to reset.");

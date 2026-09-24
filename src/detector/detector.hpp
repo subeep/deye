@@ -11,11 +11,17 @@
 #include <vector>
 
 namespace drone {
+struct TelemetryField {
+    std::string group, name, value, status;
+};
 struct Observation {
     std::string protocol, link, evidence, serial, model;
     double frequency{}, power{}, timestamp{}, latitude{}, longitude{}, altitude{};
     bool confirmed{};
-    uint64_t count{1};
+    std::string packet_json, position_status{"Unavailable"};
+    std::vector<TelemetryField> telemetry;
+    uint64_t count{1}, receiver_epoch{};
+    std::chrono::steady_clock::time_point acquired_at{};
 };
 struct Snapshot {
     std::string status{"Idle"};
@@ -40,7 +46,7 @@ private:
     struct Chunk {
         std::vector<std::complex<float>> data;
         double rate{}, frequency{}, timestamp{};
-        uint64_t epoch{};
+        uint64_t epoch{}, receiver_epoch{};
         std::chrono::steady_clock::time_point enqueued;
     };
     void run();

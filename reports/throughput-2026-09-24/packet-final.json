@@ -1,0 +1,301 @@
+[
+  {
+    "id": "dji_mini2",
+    "kind": "real",
+    "split": "development",
+    "session": "rub-dji_mini2",
+    "status": "pass",
+    "failures": [],
+    "metadata": {
+      "id": "dji_mini2",
+      "session": "rub-dji_mini2",
+      "split": "development",
+      "kind": "real",
+      "format": "cf32_le",
+      "path": "dji_mini2.fc32",
+      "sha256": "5a17913cb11cde2919347054700345c9e5595eaff7818980d332b8ac8910bc55",
+      "sample_rate_hz": 50000000,
+      "center_frequency_hz": 2444500000,
+      "metadata": {
+        "model": "Mini 2",
+        "firmware": null,
+        "controller_firmware": null,
+        "gain_db": null,
+        "antenna": null,
+        "captured_at": null,
+        "operating_state": null,
+        "frequency_note": "Replay reference center; original absolute RF center is not established."
+      },
+      "provenance": {
+        "source": "https://github.com/RUB-SysSec/DroneSecurity",
+        "commit": "9ff819843bee48fb140a0704ec78aff757896dea",
+        "license": "AGPL-3.0",
+        "note": "Already used for development; not held-out evidence."
+      },
+      "expected": {
+        "confirmed_min": 8,
+        "confirmed_max": 8,
+        "required_protocols": [
+          "DJI DroneID"
+        ],
+        "allowed_protocols": [
+          "DJI DroneID"
+        ],
+        "confirmed_models": [
+          "Mini 2"
+        ]
+      }
+    },
+    "input_hash_scope": "file",
+    "input_sha256": "5a17913cb11cde2919347054700345c9e5595eaff7818980d332b8ac8910bc55",
+    "samples": 727500,
+    "duration_s": 0.01455,
+    "chunks": 1,
+    "confirmed": 8,
+    "candidates": 10,
+    "rejected": 0,
+    "protocols": {
+      "DJI DroneID": 8
+    },
+    "confirmed_models": [
+      "Mini 2"
+    ],
+    "first_valid_available_capture_s": 0.01455,
+    "analysis_ms": 253.72214399976656,
+    "chunk_p50_ms": 253.72214399976656,
+    "chunk_p95_ms": 253.72214399976656,
+    "realtime_factor": 17.43794804122107,
+    "preprocessing_ms": 0.0,
+    "processed_samples": 727500,
+    "preprocessing": null,
+    "packet_recovery_fraction": null,
+    "events": [
+      {
+        "protocol": "DJI DroneID",
+        "link": "Identification broadcast",
+        "evidence": "OFDM + descrambling + turbo FEC + CRC24A + payload CRC16 valid",
+        "frequency": 2444500000,
+        "power": -37.0685594972491,
+        "confirmed": true,
+        "serial": "SysSecWasHere ",
+        "model": "Mini 2",
+        "sequence": 786,
+        "latitude": 0.0,
+        "longitude": 0.0,
+        "altitude": 0.0,
+        "legacy": false,
+        "carrier_correction_hz": 0,
+        "timestamp": 0.0
+      },
+      {
+        "protocol": "DJI DroneID",
+        "link": "Identification broadcast",
+        "evidence": "OFDM + descrambling + turbo FEC + CRC24A + payload CRC16 valid",
+        "frequency": 2444500000,
+        "power": -37.26376794168266,
+        "confirmed": true,
+        "serial": "SysSecWasHere ",
+        "model": "Mini 2",
+        "sequence": 787,
+        "latitude": 0.0,
+        "longitude": 0.0,
+        "altitude": 0.0,
+        "legacy": false,
+        "carrier_correction_hz": 0,
+        "timestamp": 0.0
+      },
+      {
+        "protocol": "DJI DroneID",
+        "link": "Identification broadcast",
+        "evidence": "OFDM + descrambling + turbo FEC + CRC24A + payload CRC16 valid",
+        "frequency": 2444500000,
+        "power": -37.32978066698537,
+        "confirmed": true,
+        "serial": "SysSecWasHere ",
+        "model": "Mini 2",
+        "sequence": 788,
+        "latitude": 0.0,
+        "longitude": 0.0,
+        "altitude": 0.0,
+        "legacy": false,
+        "carrier_correction_hz": 0,
+        "timestamp": 0.0
+      },
+      {
+        "protocol": "DJI DroneID",
+        "link": "Identification broadcast",
+        "evidence": "OFDM + descrambling + turbo FEC + CRC24A + payload CRC16 valid",
+        "frequency": 2444500000,
+        "power": -37.12283970245221,
+        "confirmed": true,
+        "serial": "SysSecWasHere ",
+        "model": "Mini 2",
+        "sequence": 789,
+        "latitude": 0.0,
+        "longitude": 0.0,
+        "altitude": 0.0,
+        "legacy": false,
+        "carrier_correction_hz": 0,
+        "timestamp": 0.0
+      },
+      {
+        "protocol": "DJI DroneID",
+        "link": "Identification broadcast",
+        "evidence": "OFDM + descrambling + turbo FEC + CRC24A + payload CRC16 valid",
+        "frequency": 2444500000,
+        "power": -37.19013125815227,
+        "confirmed": true,
+        "serial": "SysSecWasHere ",
+        "model": "Mini 2",
+        "sequence": 800,
+        "latitude": 0.0,
+        "longitude": 0.0,
+        "altitude": 0.0,
+        "legacy": false,
+        "carrier_correction_hz": 0,
+        "timestamp": 0.0
+      },
+      {
+        "protocol": "DJI DroneID",
+        "link": "Identification broadcast",
+        "evidence": "OFDM + descrambling + turbo FEC + CRC24A + payload CRC16 valid",
+        "frequency": 2444500000,
+        "power": -37.338363478485256,
+        "confirmed": true,
+        "serial": "SysSecWasHere ",
+        "model": "Mini 2",
+        "sequence": 804,
+        "latitude": 0.0,
+        "longitude": 0.0,
+        "altitude": 0.0,
+        "legacy": false,
+        "carrier_correction_hz": 0,
+        "timestamp": 0.0
+      },
+      {
+        "protocol": "DJI DroneID",
+        "link": "Identification broadcast",
+        "evidence": "OFDM + descrambling + turbo FEC + CRC24A + payload CRC16 valid",
+        "frequency": 2444500000,
+        "power": -38.0063408538329,
+        "confirmed": true,
+        "serial": "SysSecWasHere ",
+        "model": "Mini 2",
+        "sequence": 805,
+        "latitude": 0.0,
+        "longitude": 0.0,
+        "altitude": 0.0,
+        "legacy": false,
+        "carrier_correction_hz": 0,
+        "timestamp": 0.0
+      },
+      {
+        "protocol": "DJI DroneID",
+        "link": "Identification broadcast",
+        "evidence": "OFDM + descrambling + turbo FEC + CRC24A + payload CRC16 valid",
+        "frequency": 2444500000,
+        "power": -37.56843242700809,
+        "confirmed": true,
+        "serial": "SysSecWasHere ",
+        "model": "Mini 2",
+        "sequence": 806,
+        "latitude": 0.0,
+        "longitude": 0.0,
+        "altitude": 0.0,
+        "legacy": false,
+        "carrier_correction_hz": 0,
+        "timestamp": 0.0
+      }
+    ]
+  },
+  {
+    "id": "dji_mavic_air_2",
+    "kind": "real",
+    "split": "development",
+    "session": "rub-dji_mavic_air_2",
+    "status": "pass",
+    "failures": [],
+    "metadata": {
+      "id": "dji_mavic_air_2",
+      "session": "rub-dji_mavic_air_2",
+      "split": "development",
+      "kind": "real",
+      "format": "cf32_le",
+      "path": "dji_mavic_air_2.fc32",
+      "sha256": "623fa40f190d3fd859ec2fd62b379ad9a01a0485db3179ae29ac2e3c7a070450",
+      "sample_rate_hz": 50000000,
+      "center_frequency_hz": 2444500000,
+      "metadata": {
+        "model": "Mavic Air 2",
+        "firmware": null,
+        "controller_firmware": null,
+        "gain_db": null,
+        "antenna": null,
+        "captured_at": null,
+        "operating_state": null,
+        "frequency_note": "Replay reference center; original absolute RF center is not established."
+      },
+      "provenance": {
+        "source": "https://github.com/RUB-SysSec/DroneSecurity",
+        "commit": "9ff819843bee48fb140a0704ec78aff757896dea",
+        "license": "AGPL-3.0",
+        "note": "Already used for development; not held-out evidence."
+      },
+      "expected": {
+        "confirmed_min": 1,
+        "confirmed_max": 1,
+        "required_protocols": [
+          "DJI DroneID"
+        ],
+        "allowed_protocols": [
+          "DJI DroneID"
+        ],
+        "confirmed_models": [
+          "Mavic Air 2"
+        ]
+      }
+    },
+    "input_hash_scope": "file",
+    "input_sha256": "623fa40f190d3fd859ec2fd62b379ad9a01a0485db3179ae29ac2e3c7a070450",
+    "samples": 225280,
+    "duration_s": 0.0045056,
+    "chunks": 1,
+    "confirmed": 1,
+    "candidates": 3,
+    "rejected": 2,
+    "protocols": {
+      "DJI DroneID": 1
+    },
+    "confirmed_models": [
+      "Mavic Air 2"
+    ],
+    "first_valid_available_capture_s": 0.0045056,
+    "analysis_ms": 576.5462140116142,
+    "chunk_p50_ms": 576.5462140116142,
+    "chunk_p95_ms": 576.5462140116142,
+    "realtime_factor": 127.96213911834477,
+    "preprocessing_ms": 0.0,
+    "processed_samples": 225280,
+    "preprocessing": null,
+    "packet_recovery_fraction": null,
+    "events": [
+      {
+        "protocol": "DJI DroneID",
+        "link": "Identification broadcast",
+        "evidence": "OFDM + descrambling + turbo FEC + CRC24A + payload CRC16 valid",
+        "frequency": 2444500000,
+        "power": -18.862246500010265,
+        "confirmed": true,
+        "serial": "1WNBH3900201N1",
+        "model": "Mavic Air 2",
+        "sequence": 591,
+        "latitude": 51.44633393111904,
+        "longitude": 7.26721594197086,
+        "altitude": 42.97,
+        "legacy": false,
+        "carrier_correction_hz": 0,
+        "timestamp": 0.0
+      }
+    ]
+  }
+]

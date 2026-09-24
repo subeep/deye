@@ -54,7 +54,7 @@ void Detector::submit(const std::complex<float>* data, size_t count, double rate
     }
     // Each RX gap/reconfiguration and local queue loss starts a new continuity epoch.
     queue_.push_back({std::vector<std::complex<float>>(data, data+count),rate,frequency,timestamp,
-                      (epoch<<32) ^ gap_.load(), std::chrono::steady_clock::now()});
+                      (epoch<<32) ^ gap_.load(), epoch, std::chrono::steady_clock::now()});
     wake_.notify_one();
 }
 static bool transfer(int fd, void* data, size_t bytes, bool write, const std::atomic<bool>& running) {
@@ -167,12 +167,23 @@ void Detector::run() {
             for (auto& item:result.get_child("events")) {
                 auto& v=item.second;
                 Observation o;
+                o.receiver_epoch=batch.receiver_epoch; o.acquired_at=batch.enqueued;
                 o.protocol=v.get<std::string>("protocol"); o.link=v.get<std::string>("link");
                 o.evidence=v.get<std::string>("evidence"); o.serial=v.get<std::string>("serial","");
                 o.model=v.get<std::string>("model",""); o.confirmed=v.get<bool>("confirmed",false);
                 o.frequency=v.get<double>("frequency"); o.power=v.get<double>("power");
                 o.timestamp=v.get<double>("timestamp"); o.latitude=v.get<double>("latitude",0);
                 o.longitude=v.get<double>("longitude",0); o.altitude=v.get<double>("altitude",0);
+                if (auto telemetry=v.get_child_optional("telemetry")) {
+                    o.packet_json=telemetry->get<std::string>("packet_json", "");
+                    o.position_status=telemetry->get<std::string>("aircraft_position_status", "Unavailable");
+                    if (auto fields=telemetry->get_child_optional("fields"))
+                        for (const auto& field:*fields) {
+                            const auto& f=field.second;
+                            o.telemetry.push_back({f.get<std::string>("group"), f.get<std::string>("name"),
+                                                   f.get<std::string>("value"), f.get<std::string>("status")});
+                        }
+                }
                 if (o.confirmed) ++snapshot_.decoded;
                 auto found=std::find_if(snapshot_.observations.begin(),snapshot_.observations.end(),[&](const Observation& old){
                     if (o.confirmed) return old.confirmed && old.serial==o.serial;

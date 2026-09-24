@@ -1,0 +1,43 @@
+{
+    "fixed_channel": "true",
+    "requested_rate_hz": "25000000",
+    "dc_block": "false",
+    "device": "addr=192.168.10.2",
+    "antenna": "RX2",
+    "gain_db": "20",
+    "sample_rate_hz": "25000000",
+    "ground_truth": "Aircraft state\/firmware not independently verified; not an accuracy test",
+    "phases": [
+        {
+            "target_hz": "2444500000",
+            "actual_hz": "2444500000",
+            "tuned": "true",
+            "elapsed_s": "10.005667812",
+            "analyzed_cumulative": "229064704",
+            "queue_dropped_cumulative": "7528448",
+            "valid_cumulative": "2",
+            "queue_depth": "0",
+            "oldest_queue_ms": "0",
+            "processing_ms": "9.4053729990264401"
+        }
+    ],
+    "analyzed_samples": "229064704",
+    "queue_dropped_samples": "7528448",
+    "partial_discarded_samples": "11870208",
+    "stop_discarded_samples": "417792",
+    "continuity_breaks": "44",
+    "analysis_errors": "0",
+    "valid_packets": "2",
+    "candidates": "5",
+    "rejected": "3",
+    "rx_overflow_events": "0",
+    "rx_timeout_events": "0",
+    "rx_error_events": "0",
+    "settle_skipped_samples": "1253376",
+    "settle_seconds": "0.050135039999999999",
+    "max_queue_age_ms": "196.691135",
+    "max_result_age_ms": "195.77542500000001",
+    "status": "Listening: protocol analysis and DJI CRC-validated decoding",
+    "health_check_pass": "true",
+    "interpretation": "Cumulative decoder results may lag tuning; no per-channel packet recovery or exact RF loss inferred"
+}

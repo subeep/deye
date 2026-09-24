@@ -1,6 +1,6 @@
 # Drone detector — work queue
 
-Updated: 2026-09-23. Detailed plan, evidence and decisions: [DETECTOR_PROGRESS.md](DETECTOR_PROGRESS.md).
+Updated: 2026-09-24. Detailed plan, evidence and decisions: [DETECTOR_PROGRESS.md](DETECTOR_PROGRESS.md).
 Existing implementation and usage: [DETECTOR.md](DETECTOR.md).
 
 Check a task only when its acceptance criteria in the progress file are met.
@@ -43,7 +43,7 @@ Planning update only: no new detector implementation in this update.
 - [x] S02 — Batch replay runner using the live analyzer; machine-readable and readable reports.
 - [ ] S03 — Independent development/held-out capture split; non-drone negative corpus.
 - [ ] S04 — Software telemetry implemented/tested: separate RX events, queue loss/age, partial/stop discards, settling skips and processing latency. Tune-away time is UI-sampled; live hardware validation and exact coverage remain pending.
-- [ ] S05 — Improve throughput using benchmark evidence; preserve packet recovery.
+- [ ] S05 — NEXT: profile/reduce live host queue loss (raw ~125M, DC ~225M samples in short scans); preserve raw/DC/channelized packet regressions.
 - [ ] S06 — Protocol-module interface and validated, editable/importable/exportable profiles.
 - [ ] S07 — Explicit RF/candidate/validated-protocol/identity states, aging and detector session export.
 - [ ] S08 — Define USB test-generator commands, acknowledgements and ground-truth log format.
@@ -97,15 +97,34 @@ The last two items are recurring process reminders rather than one-time completi
 - [ ] DD01 — Local audit complete (390 files); author thesis corroborates dataset-family acquisition settings. Exact local V2 provenance/per-file metadata, license and session details remain unresolved.
 - [x] DD02 — Add hash-checked, bounded window replay without copying the dataset; distinguish exploratory results from scored regressions.
 - [x] DD03 — Run a 28-recording ON-mode pilot across seven aircraft codes and four interference conditions; preserve errors and timing.
-- [ ] DD04 — Streaming DC correction and experimental offline channelizer implemented; matched pilot complete. DC retains all known packets; aligned 25 MS/s Mini 2 retains only four of eight, so live channelization is not accepted yet.
+- [x] DD04 — Tested DC correction, experimental offline channelizer and matched pilot complete. Adjacent-carrier correction restores all eight Mini 2 packets at 25 MS/s; known Air 2 preserved. Automatic/live channelizer integration remains future work.
   - [x] Streaming DC initialization/state/gap tests and optional live detector control (default off).
   - [x] Frequency translation, anti-alias FIR and integer downsampling; amplitude/alias/timestamp tests.
   - [x] Matched raw/DC/channelized 84-window pilot; preserve failures and metadata assumptions.
-  - [ ] Resolve reduced-rate Mini 2 regression before general/live channelizer acceptance.
-  - [ ] Validate reception-health counters and fixed/scan behavior on X310.
+  - [x] Resolve reduced-rate Mini 2 regression: all eight original packets recovered; no expectations relaxed.
+  - [x] Run X310 receive-only raw/DC channel scans; tuning and health telemetry exercised. Significant host queue loss remains; later fixed-channel run recorded two validated packets.
 - [ ] DD05 — Design leakage-resistant splits; preserve unknown acquisition sessions and gather real drone-free negatives.
 - [ ] DD06 — Evaluate lightweight features/classifiers only after the pilot and split audit; test against independent X310 captures.
 
 ## Detector sample-rate control (2026-09-23)
 
 - [x] Add optional sample-rate input in the detector Receiver section; preserve profile defaults, apply on Connect/Start, retain actual-rate display and DJI bandwidth checks.
+
+
+## Revised next steps after user's validated Mini 2 screenshot (2026-09-24)
+
+Initial plan below was implemented and measured on 2026-09-24; see the latest progress log and throughput report.
+
+- [x] N01 — Separate link and decoder throughput: record negotiated NIC speed/MTU/error counters; run a bounded UHD-only baseline when the GUI releases the radio, then equivalent detector runs.
+- [x] N02 — Validate 20 MS/s as a lower-load 1 GbE preset against known shifted DJI fixtures and matched fixed-channel Mini 2 sessions; compare actual rate, packet counts, latency and queue loss with 25 MS/s. Do not assume rate alone solves host overload.
+- [x] N03 — Profile preprocessing, activity checks, OFDM synchronization/FEC and IPC/copies; optimize measured bottlenecks. Keep queues bounded and preserve continuity and all strict packet regressions.
+- [x] N04 — Make scan/hold evidence explicit: current tuned frequency versus last detection, holding countdown, age/last seen, and acquisition-epoch/timestamp-aware hold decisions with stale-result tests.
+- [ ] N05 — Initial linked-state and target-off IQ captures complete, hashed and replayed (two seconds each). Repeated independent sessions and held-out data remain pending; no general false-alert rate claimed.
+
+## Rich DJI telemetry (2026-09-24)
+
+- [x] T01 — Preserve full decoded payload and raw bytes; handle UUID length and non-text bytes without rejecting otherwise valid packets.
+- [x] T02 — Carry telemetry into C++ and show expandable per-drone details, acquisition age, and conservative field status.
+- [x] T03 — Copy/save decoded packet JSON with raw payload; preserve unknown bits and avoid unverified units/datum claims.
+- [x] T04 — Parser edge cases and real-capture subprocess telemetry transport pass; GUI builds and hardware-free expanded-panel render smoke passes. Interactive export/live telemetry review remains pending.
+- [ ] T05 — Validate velocity scales/signs, height/altitude datum, GPS epoch and state masks against independent firmware-tagged measurements before enabling derived speed/UTC/authoritative flags.

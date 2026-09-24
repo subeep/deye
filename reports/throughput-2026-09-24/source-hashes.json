@@ -1,0 +1,9 @@
+{
+  "src/detector/python/backend.py": "9e8981e2a486381df957d3658ea3dbcb4d1b968cb34441e5fe1b7705ee21cb35",
+  "src/detector/python/reference/Packet.py": "7df730643ea86917ac674aebe6f44b56c60262787997f5f53d061d502e6560b2",
+  "src/detector/controller.cpp": "dfbbe16848311701408d9238970d347c5cccb55ee78f29d90547348562892734",
+  "src/detector/detector.cpp": "fbdf9eb08c6015f1bf32d35d18d6da7eeb68bc673979d6beeb4945f7f5ba9793",
+  "src/usrp_worker.hpp": "fa32a752cb8ee0cdfcfbd40ddf1bb9e3cf02a7004cf69acddc8ce40d885eca37",
+  "src/ui/droneid_panel.cpp": "918dd9814cebecdd916c626144feecb889bfafebad29006f513f68261cd5f29c",
+  "tests/detector_live_check.cpp": "7f859855368e66ebe9202a62941847ad242cc592808f03e1ad0bc7e5b89939c1"
+}

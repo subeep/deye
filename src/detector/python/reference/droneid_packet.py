@@ -91,7 +91,13 @@ class DroneIDPacket:
         self.droneid["latitude_home"]   = droneid_pack[18]/174533.0
         self.droneid["device_type"]     = DRONEID_DRONE_TYPES.get(str(droneid_pack[19]))
         self.droneid["uuid_len"]        = droneid_pack[20]
-        self.droneid["uuid"]            = droneid_pack[21].decode('utf-8').rstrip('\u0000')
+        uuid_bytes = droneid_pack[21][:min(droneid_pack[20], 20)]
+        self.droneid["uuid"] = uuid_bytes.decode('utf-8', errors='replace').rstrip('\u0000')
+        self.droneid["uuid_hex"] = uuid_bytes.hex()
+        self.droneid["uuid_length_valid"] = droneid_pack[20] <= 20
+        self.droneid["altitude_raw"] = droneid_pack[8]
+        self.droneid["height_raw"] = droneid_pack[9]
+        self.droneid["raw_payload_hex"] = raw_bytes[:DRONEID_MAX_LEN].hex()
         self.droneid["crc-packet"]      = "%04x" % droneid_pack[22]
         self.droneid["crc-calculated"]  = self.crc()
 
